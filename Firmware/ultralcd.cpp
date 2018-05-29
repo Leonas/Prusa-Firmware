@@ -223,6 +223,20 @@ static void lcd_control_motion_menu();
 static void lcd_control_volumetric_menu();
 static void lcd_settings_menu_back();
 
+static void lcd_colorprint_change(); 
+#ifdef SNMM 
+static void extr_adj_0(); 
+static void extr_adj_1(); 
+static void extr_adj_2(); 
+static void extr_adj_3(); 
+static void fil_load_menu(); 
+static void fil_unload_menu(); 
+static void extr_unload_0(); 
+static void extr_unload_1(); 
+static void extr_unload_2(); 
+static void extr_unload_3(); 
+#endif 
+
 static void prusa_stat_printerstatus(int _status);
 static void prusa_stat_farm_number();
 static void prusa_stat_temperatures();
@@ -237,6 +251,8 @@ static void lcd_menu_fails_stats();
 #endif //TMC2130 or PAT9125
 
 void lcd_finishstatus();
+
+static char snmm_stop_print_menu(); 
 
 #ifdef DOGLCD
 static void lcd_set_contrast();

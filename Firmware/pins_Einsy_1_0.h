@@ -89,6 +89,11 @@
 #define E0_MS1_PIN          -1
 #define E0_MS2_PIN          -1
 
+#ifdef SNMM  
+#define E_MUX0_PIN 17 
+#define E_MUX1_PIN 16 
+#endif 
+
 #define SDPOWER             -1
 #define SDSS                77
 #define LED_PIN             13
@@ -163,4 +168,3 @@
 	/* Put data into buffer, sends the data */ \
 	LOGIC_ANALYZER_SERIAL_TX_WRITE_NC(C); \
 } while (0)
-
