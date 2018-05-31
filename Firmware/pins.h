@@ -17,30 +17,47 @@
 #define DIGIPOTSS_PIN -1
 #endif
 
+#ifndef E2_STEP_PIN
+  #define E2_STEP_PIN -1
+#endif
+#ifndef E2_DIR_PIN
+  #define E2_DIR_PIN -1
+#endif
+#ifndef E2_ENABLE_PIN
+  #define E2_ENABLE_PIN -1
+#endif
+#ifndef E3_STEP_PIN
+  #define E3_STEP_PIN -1
+#endif
+#ifndef E3_DIR_PIN
+  #define E3_DIR_PIN -1
+#endif
+#ifndef E3_ENABLE_PIN
+  #define E3_ENABLE_PIN -1
+#endif
+#ifndef E4_STEP_PIN
+  #define E4_STEP_PIN -1
+#endif
+#ifndef E4_DIR_PIN
+  #define E4_DIR_PIN -1
+#endif
+#ifndef E4_ENABLE_PIN
+  #define E4_ENABLE_PIN -1
+#endif
+
+
 #define LARGE_FLASH true
 
-/*****************************************************************
-* Rambo Pin Assignments 1.3
-******************************************************************/
 
-#if MOTHERBOARD == BOARD_RAMBO_MINI_1_0 //200 - orig 102
-#include "pins_Rambo_1_0.h"
-#endif //MOTHERBOARD == BOARD_RAMBO_MINI_1_0
-
-#if MOTHERBOARD == BOARD_RAMBO_MINI_1_3 //203 - orig 302
-#include "pins_Rambo_1_3.h"
-#endif //MOTHERBOARD == BOARD_RAMBO_MINI_1_3
-
-#if MOTHERBOARD == BOARD_EINSY_1_0a //310 - new
 #include "pins_Einsy_1_0.h"
-#endif //MOTHERBOARD == BOARD_EINSY_1_0a
-
-#ifndef KNOWN_BOARD
-#error Unknown MOTHERBOARD value in configuration.h
-#endif
 
 //List of pins which to ignore when asked to change by gcode, 0 and 1 are RX and TX, do not mess with those!
 #define _E0_PINS E0_STEP_PIN, E0_DIR_PIN, E0_ENABLE_PIN, HEATER_0_PIN,
+//#define _E1_PINS
+//#define _E2_PINS
+//#define _E3_PINS
+//#define _E4_PINS
+
 #if EXTRUDERS > 1
   #define _E1_PINS E1_STEP_PIN, E1_DIR_PIN, E1_ENABLE_PIN, HEATER_1_PIN,
 #else

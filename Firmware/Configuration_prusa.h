@@ -11,7 +11,7 @@
 #define NOZZLE_TYPE "E3Dv6full"
 
 // Developer flag
-#define DEVELOPER
+//#define DEVELOPER
 
 // Printer name
 #define CUSTOM_MENDEL_NAME "Prusa i3 MK3"
@@ -19,7 +19,7 @@
 // Electronics
 #define MOTHERBOARD BOARD_EINSY_1_0a
 #define STEEL_SHEET
-#define HAS_SECOND_SERIAL_PORT
+//#define HAS_SECOND_SERIAL_PORT
 
 // Prusa Single extruder multiple material support
 #define SNMM
@@ -133,14 +133,14 @@
 #define FANCHECK
 
 // Safety timer
-#define SAFETYTIMER
+//#define SAFETYTIMER  // Removed for MMU
 
 // Filament sensor
 // #define PAT9125 // removed for MMU
 
 
 // Disable some commands
-#define _DISABLE_M42_M226
+//#define _DISABLE_M42_M226
 
 // Minimum ambient temperature limit to start triggering MINTEMP errors [C]
 // this value is litlebit higher that real limit, because ambient termistor is on the board and is temperated from it,
@@ -176,8 +176,8 @@
 //#define DEBUG_BLINK_ACTIVE
 //#define DEBUG_DISABLE_FANCHECK     //disable fan check (no ISR INT7, check disabled)
 //#define DEBUG_DISABLE_FSENSORCHECK //disable fsensor check (no ISR INT7, check disabled)
-#define DEBUG_DUMP_TO_2ND_SERIAL   //dump received characters to 2nd serial line
-#define DEBUG_STEPPER_TIMER_MISSED // Stop on stepper timer overflow, beep and display a message.
+//#define DEBUG_DUMP_TO_2ND_SERIAL   //dump received characters to 2nd serial line
+//#define DEBUG_STEPPER_TIMER_MISSED // Stop on stepper timer overflow, beep and display a message.
 #define PLANNER_DIAGNOSTICS // Show the planner queue status on printer display.
 #endif /* DEBUG_BUILD */
 
