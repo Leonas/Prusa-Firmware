@@ -90,8 +90,9 @@
 #define E0_MS2_PIN          -1
 
 #ifdef SNMM  
-#define E_MUX0_PIN 17 
-#define E_MUX1_PIN 16 
+#define E_MUX0_PIN         17
+#define E_MUX1_PIN         16
+#define E_MUX2_PIN         78
 #endif 
 
 #define SDPOWER             -1
