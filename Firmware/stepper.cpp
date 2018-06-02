@@ -29,12 +29,7 @@
 #include "language.h"
 #include "cardreader.h"
 #include "speed_lookuptable.h"
-#if defined(DIGIPOTSS_PIN) && DIGIPOTSS_PIN > -1
-#include <SPI.h>
-#endif
-#ifdef TMC2130
 #include "tmc2130.h"
-#endif //TMC2130
 
 #ifdef PAT9125
 #include "fsensor.h"
@@ -1244,20 +1239,12 @@ void st_synchronize()
 {
 	while(blocks_queued())
 	{
-#ifdef TMC2130
 		manage_heater();
-		// Vojtech: Don't disable motors inside the planner!
 		if (!tmc2130_update_sg())
 		{
 			manage_inactivity(true);
 			lcd_update();
 		}
-#else //TMC2130
-		manage_heater();
-		// Vojtech: Don't disable motors inside the planner!
-		manage_inactivity(true);
-		lcd_update();
-#endif //TMC2130
 	}
 }
 
@@ -1416,16 +1403,16 @@ void babystep(const uint8_t axis,const bool direction)
 }
 #endif //BABYSTEPPING
 
-void digitalPotWrite(int address, int value) // From Arduino DigitalPotControl example
-{
-  #if defined(DIGIPOTSS_PIN) && DIGIPOTSS_PIN > -1
-    digitalWrite(DIGIPOTSS_PIN,LOW); // take the SS pin low to select the chip
-    SPI.transfer(address); //  send in the address and value via SPI:
-    SPI.transfer(value);
-    digitalWrite(DIGIPOTSS_PIN,HIGH); // take the SS pin high to de-select the chip:
-    //delay(10);
-  #endif
-}
+// void digitalPotWrite(int address, int value) // From Arduino DigitalPotControl example
+// {
+//   #if defined(DIGIPOTSS_PIN) && DIGIPOTSS_PIN > -1
+//     digitalWrite(DIGIPOTSS_PIN,LOW); // take the SS pin low to select the chip
+//     SPI.transfer(address); //  send in the address and value via SPI:
+//     SPI.transfer(value);
+//     digitalWrite(DIGIPOTSS_PIN,HIGH); // take the SS pin high to de-select the chip:
+//     //delay(10);
+//   #endif
+// }
 
 //*** MaR::180416_03
 void EEPROM_read_st(int pos, uint8_t* value, uint8_t size)
@@ -1467,65 +1454,3 @@ void microstep_init()
   for(int i=0;i<=4;i++) microstep_mode(i,microstep_modes[i]);
   #endif
 }
-
-
-#ifndef TMC2130
-
-void microstep_ms(uint8_t driver, int8_t ms1, int8_t ms2)
-{
-  if(ms1 > -1) switch(driver)
-  {
-    case 0: digitalWrite( X_MS1_PIN,ms1); break;
-    case 1: digitalWrite( Y_MS1_PIN,ms1); break;
-    case 2: digitalWrite( Z_MS1_PIN,ms1); break;
-    case 3: digitalWrite(E0_MS1_PIN,ms1); break;
-    #if defined(E1_MS1_PIN) && E1_MS1_PIN > -1
-    case 4: digitalWrite(E1_MS1_PIN,ms1); break;
-    #endif
-  }
-  if(ms2 > -1) switch(driver)
-  {
-    case 0: digitalWrite( X_MS2_PIN,ms2); break;
-    case 1: digitalWrite( Y_MS2_PIN,ms2); break;
-    case 2: digitalWrite( Z_MS2_PIN,ms2); break;
-    case 3: digitalWrite(E0_MS2_PIN,ms2); break;
-    #if defined(E1_MS2_PIN) && E1_MS2_PIN > -1
-    case 4: digitalWrite(E1_MS2_PIN,ms2); break;
-    #endif
-  }
-}
-
-void microstep_mode(uint8_t driver, uint8_t stepping_mode)
-{
-  switch(stepping_mode)
-  {
-    case 1: microstep_ms(driver,MICROSTEP1); break;
-    case 2: microstep_ms(driver,MICROSTEP2); break;
-    case 4: microstep_ms(driver,MICROSTEP4); break;
-    case 8: microstep_ms(driver,MICROSTEP8); break;
-    case 16: microstep_ms(driver,MICROSTEP16); break;
-  }
-}
-
-void microstep_readings()
-{
-      SERIAL_PROTOCOLPGM("MS1,MS2 Pins\n");
-      SERIAL_PROTOCOLPGM("X: ");
-      SERIAL_PROTOCOL(   digitalRead(X_MS1_PIN));
-      SERIAL_PROTOCOLLN( digitalRead(X_MS2_PIN));
-      SERIAL_PROTOCOLPGM("Y: ");
-      SERIAL_PROTOCOL(   digitalRead(Y_MS1_PIN));
-      SERIAL_PROTOCOLLN( digitalRead(Y_MS2_PIN));
-      SERIAL_PROTOCOLPGM("Z: ");
-      SERIAL_PROTOCOL(   digitalRead(Z_MS1_PIN));
-      SERIAL_PROTOCOLLN( digitalRead(Z_MS2_PIN));
-      SERIAL_PROTOCOLPGM("E0: ");
-      SERIAL_PROTOCOL(   digitalRead(E0_MS1_PIN));
-      SERIAL_PROTOCOLLN( digitalRead(E0_MS2_PIN));
-      #if defined(E1_MS1_PIN) && E1_MS1_PIN > -1
-      SERIAL_PROTOCOLPGM("E1: ");
-      SERIAL_PROTOCOL(   digitalRead(E1_MS1_PIN));
-      SERIAL_PROTOCOLLN( digitalRead(E1_MS2_PIN));
-      #endif
-}
-#endif //TMC2130

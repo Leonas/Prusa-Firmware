@@ -14,12 +14,12 @@
 //#define DEVELOPER
 
 // Printer name
-#define CUSTOM_MENDEL_NAME "Prusa MK3 MultiMaterial"
+#define CUSTOM_MENDEL_NAME "3D Printer"
 
 // Electronics
 #define MOTHERBOARD BOARD_EINSY_RAMBO
 #define STEEL_SHEET
-#define HAS_SECOND_SERIAL_PORT
+// #define HAS_SECOND_SERIAL_PORT
 
 // single extruder driver multiple material support
 #define EXTRUDERS 1
@@ -44,8 +44,8 @@
 #define BOWDEN_LENGTH 433 //default total length for filament fast loading part
 #define FIL_LOAD_LENGTH 102 //length for loading filament into the nozzle
 #define FIL_COOLING 10 //length for cooling moves
-#define E_MOTOR_LOW_CURRENT 350 // current for PRUSA code // NEEDS FIX FOR NEW DRIVERS
-#define E_MOTOR_HIGH_CURRENT 700 //current for unloading filament, stop print //NEEDS FIX FOR NEW DRIVERS
+// #define E_MOTOR_LOW_CURRENT 350 // current for PRUSA code // NEEDS FIX FOR NEW DRIVERS
+// #define E_MOTOR_HIGH_CURRENT 700 //current for unloading filament, stop print //NEEDS FIX FOR NEW DRIVERS
 #endif //MULTIPLEXER
 
 
@@ -327,22 +327,6 @@
 #define EXTRUDER_2_AUTO_FAN_PIN   -1
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
 #define EXTRUDER_AUTO_FAN_SPEED   255  // == full speed
-
-
-
-/*------------------------------------
- LOAD/UNLOAD FILAMENT SETTINGS
- *------------------------------------*/
-
-// Load filament commands
-#define LOAD_FILAMENT_0 "M83"
-#define LOAD_FILAMENT_1 "G1 E70 F400"
-#define LOAD_FILAMENT_2 "G1 E40 F100"
-
-// Unload filament commands
-#define UNLOAD_FILAMENT_0 "M83"
-#define UNLOAD_FILAMENT_1 "G1 E-80 F7000"
-
 
 
 /*------------------------------------

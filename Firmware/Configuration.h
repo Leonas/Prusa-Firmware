@@ -7,10 +7,10 @@
 #define STR(x) STR_HELPER(x)
 
 // Firmware version
-#define FW_VERSION "3.2.1"
+#define FW_VERSION "3.5"
 #define FW_COMMIT_NR   576
-#define FW_DEV_VERSION FW_VERSION_UNKNOWN // FW_VERSION_UNKNOWN = unofficial build
-#define FW_REPOSITORY "Unknown"
+#define FW_DEV_VERSION FW_VERSION_GOLD 
+#define FW_REPOSITORY "Leonas/Prusa-Firmware"
 #define FW_VERSION_FULL FW_VERSION "-" STR(FW_COMMIT_NR)
 
 // Debug version must have #define DEBUG_BUILD

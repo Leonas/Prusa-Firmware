@@ -4055,7 +4055,7 @@ void lcd_wizard(int state) {
 			lcd_implementation_clear();
 			lcd_print_at_PGM(0, 2, MSG_LOADING_FILAMENT);
 #ifdef MULTIPLEXER
-			switch_multiplexer(0);
+			switch_multiplexer(0); //POSSIBLE THIS IS ALWAYS GOING TO 0?
 #endif
 			gcode_M701();
 #ifdef PAT9125
@@ -5103,8 +5103,6 @@ void switch_multiplexer(int extr) { //switches multiplexer for extruders
 	delay(100);
 
 	disable_e0();
-	disable_e1();
-	disable_e2();
 
 	multiplexer_extruder = extr;
 
@@ -5164,13 +5162,8 @@ void extruder_load(int extruder) //loading filament for MULTIPLEXER
 		extr_mov(0.001,1000);
 		delay_keep_alive(2);
 	} while (!lcd_clicked());
-	//delay_keep_alive(500);
 	KEEPALIVE_STATE(IN_HANDLER);
 	st_synchronize();
-	//correct = lcd_show_fullscreen_message_yes_no_and_wait_P(MSG_FIL_LOADED_CHECK, false);
-	//if (!correct) goto	START;
-	//extr_mov(BOWDEN_LENGTH/2.f, 500); //dividing by 2 is there because of max. extrusion length limitation (x_max + y_max)
-	//extr_mov(BOWDEN_LENGTH/2.f, 500);
 	extr_mov(bowden_length[extruder], 500);
 	lcd_implementation_clear();
 	lcd.setCursor(0, 0); lcd_printPGM(MSG_LOADING_FILAMENT);
