@@ -100,42 +100,13 @@
 //END AUTOSET LOCATIONS OF LIMIT SWITCHES -ZP
 
 
-// A single Z stepper driver is usually used to drive 2 stepper motors.
-// Uncomment this define to utilize a separate stepper driver for each Z axis motor.
-// Only a few motherboards support this, like RAMPS, which have dual extruder support (the 2nd, often unused, extruder driver is used
-// to control the 2nd Z axis stepper motor). The pins are currently only defined for a RAMPS motherboards.
-// On a RAMPS (or other 5 driver) motherboard, using this feature will limit you to using 1 extruder.
-//#define Z_DUAL_STEPPER_DRIVERS
-
-#ifdef Z_DUAL_STEPPER_DRIVERS
-  #undef EXTRUDERS
-  #define EXTRUDERS 1
-#endif
-
-// Same again but for Y Axis.
-//#define Y_DUAL_STEPPER_DRIVERS
-
-// Define if the two Y drives need to rotate in opposite directions
-#define INVERT_Y2_VS_Y_DIR true
-
-#ifdef Y_DUAL_STEPPER_DRIVERS
-  #undef EXTRUDERS
-  #define EXTRUDERS 1
-#endif
-
-#if defined (Z_DUAL_STEPPER_DRIVERS) && defined (Y_DUAL_STEPPER_DRIVERS)
-  #error "You cannot have dual drivers for both Y and Z"
-#endif
-
 //homing hits the endstop, then retracts by this distance, before it tries to slowly bump again:
 #define X_HOME_RETRACT_MM 5
 #define Y_HOME_RETRACT_MM 5
 #define Z_HOME_RETRACT_MM 2
-//#define QUICK_HOME  //if this is defined, if both x and y are to be homed, a diagonal move will be performed initially.
 
 #define AXIS_RELATIVE_MODES {false, false, false, false}
-#define MAX_STEP_FREQUENCY 40000 // Max step frequency for Ultimaker (5000 pps / half step). Toshiba steppers are 4x slower, but Prusa3D does not use those.
-//By default pololu step drivers require an active high signal. However, some high power drivers require an active low signal as step.
+#define MAX_STEP_FREQUENCY 40000 
 #define INVERT_X_STEP_PIN false
 #define INVERT_Y_STEP_PIN false
 #define INVERT_Z_STEP_PIN false
@@ -146,8 +117,6 @@
 
 #define DEFAULT_MINIMUMFEEDRATE       0.0     // minimum feedrate
 #define DEFAULT_MINTRAVELFEEDRATE     0.0
-
-// Feedrates for manual moves along X, Y, Z, E from panel
 
 
 //Comment to disable setting feedrate multiplier via encoder
@@ -183,38 +152,9 @@
 #define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E" // You might want to keep the z enabled so your bed stays in place.
 
 #define SDCARD_RATHERRECENTFIRST  //reverse file order of sd card menu display. Its sorted practically after the file system block order.
-// if a file is deleted, it frees a block. hence, the order is not purely chronological. To still have auto0.g accessible, there is again the option to do that.
-// using:
-//#define MENU_ADDAUTOSTART
 
-/**
-* Sort SD file listings in alphabetical order.
-*
-* With this option enabled, items on SD cards will be sorted
-* by name for easier navigation.
-*
-* By default...
-*
-*  - Use the slowest -but safest- method for sorting.
-*  - Folders are sorted to the top.
-*  - The sort key is statically allocated.
-*  - No added G-code (M34) support.
-*  - 40 item sorting limit. (Items after the first 40 are unsorted.)
-*
-* SD sorting uses static allocation (as set by SDSORT_LIMIT), allowing the
-* compiler to calculate the worst-case usage and throw an error if the SRAM
-* limit is exceeded.
-*
-*  - SDSORT_USES_RAM provides faster sorting via a static directory buffer.
-*  - SDSORT_USES_STACK does the same, but uses a local stack-based buffer.
-*  - SDSORT_CACHE_NAMES will retain the sorted file listing in RAM. (Expensive!)
-*  - SDSORT_DYNAMIC_RAM only uses RAM when the SD menu is visible. (Use with caution!)
-*/
 	#define SDCARD_SORT_ALPHA //Alphabetical sorting of SD files menu
 	
-	// SD Card Sorting options
-	// In current firmware Prusa Firmware version,
-	// SDSORT_CACHE_NAMES and SDSORT_DYNAMIC_RAM is not supported and must be set to false.
 	#ifdef SDCARD_SORT_ALPHA
 	  #define SD_SORT_TIME 0
 	  #define SD_SORT_ALPHA 1
@@ -232,23 +172,6 @@
 	#if defined(SDCARD_SORT_ALPHA)
 	  #define HAS_FOLDER_SORTING (FOLDER_SORTING || SDSORT_GCODE)
 	#endif
-
-// Show a progress bar on the LCD when printing from SD?
-//#define LCD_PROGRESS_BAR
-
-#ifdef LCD_PROGRESS_BAR
-  // Amount of time (ms) to show the bar
-  #define PROGRESS_BAR_BAR_TIME 2000
-  // Amount of time (ms) to show the status message
-  #define PROGRESS_BAR_MSG_TIME 3000
-  // Amount of time (ms) to retain the status message (0=forever)
-  #define PROGRESS_MSG_EXPIRE   0
-  // Enable this to show messages for MSG_TIME then hide them
-  //#define PROGRESS_MSG_ONCE
-#endif
-
-// Enable the option to stop SD printing when hitting and endstops, needs to be enabled from the LCD menu when this option is enabled.
-//#define ABORT_ON_ENDSTOP_HIT_FEATURE_ENABLED
 
 // Babystepping enables the user to control the axis in tiny amounts, independently from the normal printing process
 // it can e.g. be used to change z-positions in the print startup phase in real-time
@@ -310,18 +233,13 @@
 
 const unsigned int dropsegments=5; //everything with less than this number of steps will be ignored as move and joined with the next movement
 
-// If you are using a RAMPS board or cheap E-bay purchased boards that do not detect when an SD card is inserted
-// You can get round this by connecting a push button or single throw switch to the pin defined as SDCARDCARDDETECT
-// in the pins.h file.  When using a push button pulling the pin to ground this will need inverted.  This setting should
-// be commented out otherwise
 #define SDCARDDETECTINVERTED
 
 #ifdef ULTIPANEL
  #undef SDCARDDETECTINVERTED
 #endif
 
-// Power Signal Control Definitions
-// By default use ATX definition
+
 #ifndef POWER_SUPPLY
   #define POWER_SUPPLY 1
 #endif
@@ -336,28 +254,15 @@ const unsigned int dropsegments=5; //everything with less than this number of st
   #define PS_ON_ASLEEP LOW
 #endif
 
-// Control heater 0 and heater 1 in parallel.
-//#define HEATERS_PARALLEL
 
 //===========================================================================
 //=============================Buffers           ============================
 //===========================================================================
 
-// The number of linear motions that can be in the plan at any give time.
-// THE BLOCK_BUFFER_SIZE NEEDS TO BE A POWER OF 2, i.g. 8,16,32 because shifts and ors are used to do the ring-buffering.
-#if defined SDSUPPORT
-  #define BLOCK_BUFFER_SIZE 16   // SD,LCD,Buttons take more memory, block buffer needs to be smaller
-#else
-  #define BLOCK_BUFFER_SIZE 16 // maximize block buffer
-#endif
+#define BLOCK_BUFFER_SIZE 16   
 
-
-//The ASCII buffer for receiving from the serial:
-#define MAX_CMD_SIZE 96
+#define MAX_CMD_SIZE 96 //The ASCII buffer for receiving from the serial:
 #define BUFSIZE 4
-// The command header contains the following values:
-// 1st byte: the command source (CMDBUFFER_CURRENT_TYPE_USB, CMDBUFFER_CURRENT_TYPE_SDCARD, CMDBUFFER_CURRENT_TYPE_UI or CMDBUFFER_CURRENT_TYPE_CHAINED)
-// 2nd and 3rd byte (LSB first) contains a 16bit length of a command including its preceding comments.
 #define CMDHDRSIZE 3
 
 
@@ -380,7 +285,6 @@ const unsigned int dropsegments=5; //everything with less than this number of st
 #endif
 
 //adds support for experimental filament exchange support M600; requires display
-
 
 #ifdef FILAMENTCHANGEENABLE
   #ifdef EXTRUDER_RUNOUT_PREVENT
