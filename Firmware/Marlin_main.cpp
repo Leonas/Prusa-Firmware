@@ -4514,13 +4514,6 @@ void process_commands()
         powersupply = false;
         LCD_MESSAGERPGM(CAT4(CUSTOM_MENDEL_NAME,PSTR(" "),MSG_OFF,PSTR("."))); //!!
         
-        /*
-        MACHNAME = "Prusa i3"
-        MSGOFF = "Vypnuto"
-        "Prusai3"" ""vypnuto""."
-        
-        "Prusa i3"" "MSG_ALL[lang_selected][50]"."
-        */
         lcd_update();
       #endif
 	  break;
@@ -6101,12 +6094,12 @@ void process_commands()
 			  tmp_extruder = code_value();
 		  }
 		  multiplexer_filaments_used |= (1 << tmp_extruder); //for stop print
-#ifdef MULTIPLEXER
+      #ifdef MULTIPLEXER
           
-    #ifdef LIN_ADVANCE
+        #ifdef LIN_ADVANCE
           if (multiplexer_extruder != tmp_extruder)
             clear_current_adv_vars(); //Check if the selected extruder is not the active one and reset LIN_ADVANCE variables if so.
-    #endif
+        #endif
           
 		  multiplexer_extruder = tmp_extruder;
 
@@ -6114,8 +6107,6 @@ void process_commands()
 		  delay(100);
 
 		  disable_e0();
-		  disable_e1();
-		  disable_e2();
 
 		  pinMode(E_MUX0_PIN, OUTPUT);
 		  pinMode(E_MUX1_PIN, OUTPUT);

@@ -2490,7 +2490,7 @@ const char * const MSG_WIZARD_V2_CAL_2_LANG_TABLE[LANG_NUM] PROGMEM = {
 	MSG_WIZARD_V2_CAL_2_CZ
 };
 
-const char MSG_WIZARD_WELCOME_EN[] PROGMEM = "Hi, I am your Original Prusa i3 printer. Would you like me to guide you through the setup process?";
+const char MSG_WIZARD_WELCOME_EN[] PROGMEM = "Hello. Would you like me to guide you through the setup process?";
 const char MSG_WIZARD_WELCOME_CZ[] PROGMEM = "Dobry den, jsem vase tiskarna Original Prusa i3. Chcete abych Vas provedla kalibracnim procesem?";
 const char * const MSG_WIZARD_WELCOME_LANG_TABLE[LANG_NUM] PROGMEM = {
 	MSG_WIZARD_WELCOME_EN,
