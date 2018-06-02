@@ -14,25 +14,7 @@
 #ifdef NEW_XYZCAL
 
 
-// Signal pinouts
 
-// direction signal - MiniRambo
-//#define X_DIR_PIN    48 //PL1 (-)
-//#define Y_DIR_PIN    49 //PL0 (-)
-//#define Z_DIR_PIN    47 //PL2 (-)
-//#define E0_DIR_PIN   43 //PL6 (+)
-
-//direction signal - EinsyRambo
-//#define X_DIR_PIN    49 //PL0 (+)
-//#define Y_DIR_PIN    48 //PL1 (-)
-//#define Z_DIR_PIN    47 //PL2 (+)
-//#define E0_DIR_PIN   43 //PL6 (-)
-
-//step signal pinout - common for all rambo boards
-//#define X_STEP_PIN   37 //PC0 (+)
-//#define Y_STEP_PIN   36 //PC1 (+)
-//#define Z_STEP_PIN   35 //PC2 (+)
-//#define E0_STEP_PIN  34 //PC3 (+)
 
 
 sm4_stop_cb_t sm4_stop_cb = 0;

@@ -92,9 +92,9 @@
 #ifdef SNMM
 #define E_MUX0_PIN         17
 #define E_MUX1_PIN         16
-#define E1_STEP_PIN         33
-#define E1_DIR_PIN          42
-#define E1_ENABLE_PIN       25
+//#define E1_STEP_PIN         33
+//#define E1_DIR_PIN          42
+//#define E1_ENABLE_PIN       25
 #endif
 
 #define SDPOWER             -1
