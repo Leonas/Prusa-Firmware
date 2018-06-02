@@ -430,9 +430,6 @@ void Config_ResetDefault()
     max_jerk[E_AXIS] = DEFAULT_EJERK;
     add_homing[X_AXIS] = add_homing[Y_AXIS] = add_homing[Z_AXIS] = 0;
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-    zprobe_zoffset = -Z_PROBE_OFFSET_FROM_EXTRUDER;
-#endif
 #ifdef DOGLCD
     lcd_contrast = DEFAULT_LCD_CONTRAST;
 #endif

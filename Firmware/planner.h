@@ -26,10 +26,6 @@
 
 #include "Marlin.h"
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-#include "vector_3.h"
-#endif // ENABLE_AUTO_BED_LEVELING
-
 enum BlockFlag {
     // Planner flag to recalculate trapezoids on entry junction.
     // This flag has an optimization purpose only.
@@ -123,10 +119,6 @@ typedef struct {
   extern float extruder_advance_k, advance_ed_ratio;
 #endif
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-// this holds the required transform to compensate for bed level
-extern matrix_3x3 plan_bed_level_matrix;
-#endif // #ifdef ENABLE_AUTO_BED_LEVELING
 
 // Initialize the motion plan subsystem      
 void plan_init();
@@ -134,22 +126,10 @@ void plan_init();
 // Add a new linear movement to the buffer. x, y and z is the signed, absolute target position in 
 // millimaters. Feed rate specifies the speed of the motion.
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate, const uint8_t &extruder);
-
-// Get the position applying the bed level matrix if enabled
-vector_3 plan_get_position();
-#else
-void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate, const uint8_t &extruder);
-//void plan_buffer_line(const float &x, const float &y, const float &z, const float &e, float feed_rate, const uint8_t &extruder);
-#endif // ENABLE_AUTO_BED_LEVELING
 
 // Set position. Used for G92 instructions.
-//#ifdef ENABLE_AUTO_BED_LEVELING
 void plan_set_position(float x, float y, float z, const float &e);
-//#else
-//void plan_set_position(const float &x, const float &y, const float &z, const float &e);
-//#endif // ENABLE_AUTO_BED_LEVELING
+
 
 void plan_set_z_position(const float &z);
 void plan_set_e_position(const float &e);

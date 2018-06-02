@@ -83,14 +83,6 @@ float max_jerk[NUM_AXIS];
 float mintravelfeedrate;
 unsigned long axis_steps_per_sqr_second[NUM_AXIS];
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-// this holds the required transform to compensate for bed level
-matrix_3x3 plan_bed_level_matrix = {
-	1.0, 0.0, 0.0,
-	0.0, 1.0, 0.0,
-	0.0, 0.0, 1.0,
-};
-#endif // #ifdef ENABLE_AUTO_BED_LEVELING
 
 // The current position of the tool in absolute steps
 long position[NUM_AXIS];   //rescaled from extern when axis_steps_per_unit are changed by gcode
@@ -661,9 +653,6 @@ void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate
   planner_update_queue_min_counter();
 #endif /* PLANNER_DIAGNOSTICS */
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-  apply_rotation_xyz(plan_bed_level_matrix, x, y, z);
-#endif // ENABLE_AUTO_BED_LEVELING
 
     // Apply the machine correction matrix.
     {
@@ -1256,26 +1245,9 @@ Having the real displacement of the head, we can calculate the total movement le
   ENABLE_STEPPER_DRIVER_INTERRUPT();
 }
 
-#ifdef ENABLE_AUTO_BED_LEVELING
-vector_3 plan_get_position() {
-	vector_3 position = vector_3(st_get_position_mm(X_AXIS), st_get_position_mm(Y_AXIS), st_get_position_mm(Z_AXIS));
-
-	//position.debug("in plan_get position");
-	//plan_bed_level_matrix.debug("in plan_get bed_level");
-	matrix_3x3 inverse = matrix_3x3::transpose(plan_bed_level_matrix);
-	//inverse.debug("in plan_get inverse");
-	position.apply_rotation(inverse);
-	//position.debug("after rotation");
-
-	return position;
-}
-#endif // ENABLE_AUTO_BED_LEVELING
 
 void plan_set_position(float x, float y, float z, const float &e)
 {
-#ifdef ENABLE_AUTO_BED_LEVELING
-    apply_rotation_xyz(plan_bed_level_matrix, x, y, z);
-#endif // ENABLE_AUTO_BED_LEVELING
 
     // Apply the machine correction matrix.
     if (world2machine_correction_mode != WORLD2MACHINE_CORRECTION_NONE)
