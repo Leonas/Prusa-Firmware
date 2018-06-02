@@ -1446,12 +1446,6 @@ uint8_t SilentMode = eeprom_read_byte((uint8_t*)EEPROM_SILENT);
 }
 
 
-
-
-void st_current_set(uint8_t driver, int current)
-{
-}
-
 void microstep_init()
 {
   const uint8_t microstep_modes[] = MICROSTEP_MODES;

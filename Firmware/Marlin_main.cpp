@@ -2443,8 +2443,8 @@ void process_commands()
   KEEPALIVE_STATE(IN_HANDLER);
 
 #ifdef MULTIPLEXER //PROBLEM
-  float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
-  float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
+  // float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
+  // float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
   int8_t SilentMode;
 #endif
   
@@ -5464,13 +5464,13 @@ void process_commands()
             target[E_AXIS] -= FILAMENTCHANGE_FINALRETRACT;
             st_synchronize();
 #ifdef TMC2130
-            uint8_t tmc2130_current_r_bckp = tmc2130_current_r[E_AXIS];
-            tmc2130_set_current_r(E_AXIS, TMC2130_UNLOAD_CURRENT_R);
+            uint8_t tmc2130_current_r_bckp = tmc2130_current_r[E_AXIS];  //save the currently used current
+            tmc2130_set_current_r(E_AXIS, TMC2130_UNLOAD_CURRENT_R);    //lower current for unloading filament
 #else 
 
-			st_current_set(2, 200); //set lower E motor current for unload to protect filament sensor and ptfe tube
-			float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
-			float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
+			//st_current_set(2, 200); //set lower E motor current for unload to protect filament sensor and ptfe tube
+			//float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
+			//float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
 
 #endif //TMC2130
 
@@ -5486,10 +5486,10 @@ void process_commands()
 
 #ifdef TMC2130            
             tmc2130_set_current_r(E_AXIS, tmc2130_current_r_bckp);
-#else
-			uint8_t silentMode = eeprom_read_byte((uint8_t*)EEPROM_SILENT);
-			if(silentMode != SILENT_MODE_POWER) st_current_set(2, tmp_motor[2]); //set E back to normal operation currents
-			else st_current_set(2, tmp_motor_loud[2]);		
+// #else
+			// uint8_t silentMode = eeprom_read_byte((uint8_t*)EEPROM_SILENT);
+			// if(silentMode != SILENT_MODE_POWER) st_current_set(2, tmp_motor[2]); //set E back to normal operation currents
+			// else st_current_set(2, tmp_motor_loud[2]);		
 #endif //TMC2130
 
 #endif // MULTIPLEXER
@@ -5849,18 +5849,18 @@ void process_commands()
     case 907: // M907 Set digital trimpot motor current using axis codes.
     {
       #if defined(DIGIPOTSS_PIN) && DIGIPOTSS_PIN > -1
-        for(int i=0;i<NUM_AXIS;i++) if(code_seen(axis_codes[i])) st_current_set(i,code_value());
-        if(code_seen('B')) st_current_set(4,code_value());
-        if(code_seen('S')) for(int i=0;i<=4;i++) st_current_set(i,code_value());
+        // for(int i=0;i<NUM_AXIS;i++) if(code_seen(axis_codes[i])) st_current_set(i,code_value());
+        // if(code_seen('B')) st_current_set(4,code_value());
+        // if(code_seen('S')) for(int i=0;i<=4;i++) st_current_set(i,code_value());
       #endif
       #ifdef MOTOR_CURRENT_PWM_XY_PIN
-        if(code_seen('X')) st_current_set(0, code_value());
+        // if(code_seen('X')) st_current_set(0, code_value());
       #endif
       #ifdef MOTOR_CURRENT_PWM_Z_PIN
-        if(code_seen('Z')) st_current_set(1, code_value());
+        // if(code_seen('Z')) st_current_set(1, code_value());
       #endif
       #ifdef MOTOR_CURRENT_PWM_E_PIN
-        if(code_seen('E')) st_current_set(2, code_value());
+        // if(code_seen('E')) st_current_set(2, code_value());
       #endif
     }
     break;
@@ -6280,44 +6280,6 @@ void ClearToSend()
         SERIAL_PROTOCOLLNRPGM(MSG_OK);
 }
 
-#if MOTHERBOARD == BOARD_RAMBO_MINI_1_0 || MOTHERBOARD == BOARD_RAMBO_MINI_1_3
-void update_currents() {
-	float current_high[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
-	float current_low[3] = DEFAULT_PWM_MOTOR_CURRENT;
-	float tmp_motor[3];
-	
-	//SERIAL_ECHOLNPGM("Currents updated: ");
-
-	if (destination[Z_AXIS] < Z_SILENT) {
-		//SERIAL_ECHOLNPGM("LOW");
-		for (uint8_t i = 0; i < 3; i++) {
-			st_current_set(i, current_low[i]);		
-			/*MYSERIAL.print(int(i));
-			SERIAL_ECHOPGM(": ");
-			MYSERIAL.println(current_low[i]);*/
-		}		
-	}
-	else if (destination[Z_AXIS] > Z_HIGH_POWER) {
-		//SERIAL_ECHOLNPGM("HIGH");
-		for (uint8_t i = 0; i < 3; i++) {
-			st_current_set(i, current_high[i]);
-			/*MYSERIAL.print(int(i));
-			SERIAL_ECHOPGM(": ");
-			MYSERIAL.println(current_high[i]);*/
-		}		
-	}
-	else {
-		for (uint8_t i = 0; i < 3; i++) {
-			float q = current_low[i] - Z_SILENT*((current_high[i] - current_low[i]) / (Z_HIGH_POWER - Z_SILENT));
-			tmp_motor[i] = ((current_high[i] - current_low[i]) / (Z_HIGH_POWER - Z_SILENT))*destination[Z_AXIS] + q;
-			st_current_set(i, tmp_motor[i]);			
-			/*MYSERIAL.print(int(i));
-			SERIAL_ECHOPGM(": ");
-			MYSERIAL.println(tmp_motor[i]);*/
-		}
-	}
-}
-#endif //MOTHERBOARD == BOARD_RAMBO_MINI_1_0 || MOTHERBOARD == BOARD_RAMBO_MINI_1_3
 
 void get_coordinates()
 {

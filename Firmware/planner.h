@@ -119,6 +119,8 @@ typedef struct {
   extern float extruder_advance_k, advance_ed_ratio;
 #endif
 
+void plan_buffer_line(float x, float y, float z, const float &e, float feed_rate, const uint8_t &extruder);
+
 
 // Initialize the motion plan subsystem      
 void plan_init();

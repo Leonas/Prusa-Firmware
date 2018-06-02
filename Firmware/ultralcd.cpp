@@ -5186,9 +5186,7 @@ void extruder_load(int extruder) //loading filament for MULTIPLEXER
 }
 
 
-void extr_unload() { //unloads filament
-	float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
-	float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
+void extr_unload() { //unloads filament for multiplexer?
 	uint8_t SilentMode = eeprom_read_byte((uint8_t*)EEPROM_SILENT);
 
 	if (degHotend0() > EXTRUDE_MINTEMP) {
@@ -5206,7 +5204,7 @@ void extr_unload() { //unloads filament
 		
 		current_position[E_AXIS] += 10; //extrusion
 		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 10, active_extruder);
-		st_current_set(2, E_MOTOR_HIGH_CURRENT);
+		// st_current_set(2, E_MOTOR_HIGH_CURRENT);
 		if (current_temperature[0] < 230) { //PLA & all other filaments
 			current_position[E_AXIS] += 5.4;
 			plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 2800 / 60, active_extruder);
@@ -5236,8 +5234,8 @@ void extr_unload() { //unloads filament
 		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 500, active_extruder);
 		st_synchronize();
 		//st_current_init();
-		if (SilentMode != SILENT_MODE_OFF) st_current_set(2, tmp_motor[2]); //set back to normal operation currents
-		else st_current_set(2, tmp_motor_loud[2]);
+		// if (SilentMode != SILENT_MODE_OFF) st_current_set(2, tmp_motor[2]); //set back to normal operation currents
+		// else st_current_set(2, tmp_motor_loud[2]);
 		lcd_update_enable(true);
 		lcd_return_to_status();
 		max_feedrate[E_AXIS] = 50;
@@ -6728,8 +6726,6 @@ static bool lcd_selfcheck_axis(int _axis, int _travel)
 #ifndef TMC2130
 static bool lcd_selfcheck_pulleys(int axis)
 {
-	float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
-	float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
 	float current_position_init;
 	float move;
 	bool endstop_triggered = false;
@@ -6748,12 +6744,12 @@ static bool lcd_selfcheck_pulleys(int axis)
 	for (i = 0; i < 5; i++) {
 		refresh_cmd_timeout();
 		current_position[axis] = current_position[axis] + move;
-		st_current_set(0, 850); //set motor current higher
+		// st_current_set(0, 850); //set motor current higher
 		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], 200, active_extruder);
 		st_synchronize();
 //*** MaR::180416_02
-          if (SilentModeMenu != SILENT_MODE_OFF) st_current_set(0, tmp_motor[0]); //set back to normal operation currents
-		else st_current_set(0, tmp_motor_loud[0]); //set motor current back			
+          // if (SilentModeMenu != SILENT_MODE_OFF) st_current_set(0, tmp_motor[0]); //set back to normal operation currents
+		// else st_current_set(0, tmp_motor_loud[0]); //set motor current back			
 		current_position[axis] = current_position[axis] - move;
 		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[3], 50, active_extruder);
 		st_synchronize();

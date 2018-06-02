@@ -344,8 +344,8 @@ void xyzcal_scan_pixels_32x32(int16_t cx, int16_t cy, int16_t min_z, int16_t max
 			count_position[0] += (r&1)?-64:64;
 			count_position[2] = z;
 		}
-		if (pixels)
-			for (uint8_t c = 0; c < 32; c++)
+//		if (pixels)
+//			for (uint8_t c = 0; c < 32; c++)
 				// DBG(_n("%02x"), pixels[((uint16_t)r<<5) + c]);
 		// DBG(_n("\n"));
 	}
@@ -362,7 +362,7 @@ void xyzcal_histo_pixels_32x32(uint8_t* pixels, uint16_t* histo)
 			uint8_t pix = pixels[((uint16_t)r<<5) + c];
 			histo[pix >> 4]++;
 		}
-	for (uint8_t l = 0; l < 16; l++)
+//	for (uint8_t l = 0; l < 16; l++)
 		// DBG(_n(" %2d %d\n"), l, histo[l]);
 }
 
@@ -403,12 +403,12 @@ void xyzcal_adjust_pixels(uint8_t* pixels, uint16_t* histo)
 		if (pix > 255) pix = 255;
 		pixels[i] = (uint8_t)pix;
 	}
-	for (uint8_t r = 0; r < 32; r++)
-	{
-		for (uint8_t c = 0; c < 32; c++)
+//	for (uint8_t r = 0; r < 32; r++)
+//	{
+//		for (uint8_t c = 0; c < 32; c++)
 //			DBG(_n("%02x"), pixels[((uint16_t)r<<5) + c]);
 //		DBG(_n("\n"));
-	}
+//	}
 }
 
 /*

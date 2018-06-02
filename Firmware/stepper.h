@@ -97,7 +97,6 @@ void digitalPotWrite(int address, int value);
 void microstep_ms(uint8_t driver, int8_t ms1, int8_t ms2);
 void microstep_mode(uint8_t driver, uint8_t stepping);
 void st_current_init();
-void st_current_set(uint8_t driver, int current);
 void microstep_init();
 void microstep_readings();
 
