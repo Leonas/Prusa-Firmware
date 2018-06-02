@@ -7,8 +7,8 @@
 
 // Printer revision
 #define PRINTER_TYPE PRINTER_MK3
-#define FILAMENT_SIZE "1_75mm_MK3"
-#define NOZZLE_TYPE "E3Dv6full"
+#define FILAMENT_SIZE "1.75mm"
+#define NOZZLE_TYPE "E3Dv6"
 
 // Developer flag
 //#define DEVELOPER
@@ -17,7 +17,7 @@
 #define CUSTOM_MENDEL_NAME "Prusa MK3 MultiMaterial"
 
 // Electronics
-#define MOTHERBOARD BOARD_EINSY_1_0a
+#define MOTHERBOARD BOARD_EINSY_RAMBO
 #define STEEL_SHEET
 #define HAS_SECOND_SERIAL_PORT
 

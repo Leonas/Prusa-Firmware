@@ -814,11 +814,11 @@ FORCE_INLINE void isr() {
         //e_steps += esteps_inc;
         e_steps += current_estep_rate - current_adv_steps;
 #if 0
-        if (abs(esteps_inc) > 4) {
-          LOGIC_ANALYZER_SERIAL_TX_WRITE(esteps_inc);
-          if (esteps_inc < -511 || esteps_inc > 511)
-            LOGIC_ANALYZER_SERIAL_TX_WRITE(esteps_inc >> 9);
-        }
+      //  if (abs(esteps_inc) > 4) {
+      //    LOGIC_ANALYZER_SERIAL_TX_WRITE(esteps_inc);
+      //    if (esteps_inc < -511 || esteps_inc > 511)
+      //      LOGIC_ANALYZER_SERIAL_TX_WRITE(esteps_inc >> 9);
+      //  }
 #endif
         current_adv_steps = current_estep_rate;
       }

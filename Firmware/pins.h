@@ -49,7 +49,7 @@
 #define LARGE_FLASH true
 
 
-#include "pins_Einsy_1_0.h"
+#include "pins_Einsy_Rambo.h"
 
 //List of pins which to ignore when asked to change by gcode, 0 and 1 are RX and TX, do not mess with those!
 #define _E0_PINS E0_STEP_PIN, E0_DIR_PIN, E0_ENABLE_PIN, HEATER_0_PIN,
