@@ -75,7 +75,7 @@ bool tmc2130_sg_change = false;
 
 bool skip_debug_msg = false;
 
-#define DBG(args...) printf_P(args)
+//#define DBG(args...) printf_P(args)
 #define _n PSTR
 #define _i PSTR
 
@@ -144,7 +144,7 @@ uint16_t __tcoolthrs(uint8_t axis)
 
 void tmc2130_init()
 {
-	DBG(_n("tmc2130_init(), mode=%S\n"), tmc2130_mode?_n("STEALTH"):_n("NORMAL"));
+	//DBG(_n("tmc2130_init(), mode=%S\n"), tmc2130_mode?_n("STEALTH"):_n("NORMAL"));
 	WRITE(X_TMC2130_CS, HIGH);
 	WRITE(Y_TMC2130_CS, HIGH);
 	WRITE(Z_TMC2130_CS, HIGH);
@@ -452,21 +452,21 @@ void tmc2130_setup_chopper(uint8_t axis, uint8_t mres, uint8_t current_h, uint8_
 
 void tmc2130_set_current_h(uint8_t axis, uint8_t current)
 {
-	DBG(_n("tmc2130_set_current_h(axis=%d, current=%d\n"), axis, current);
+	//DBG(_n("tmc2130_set_current_h(axis=%d, current=%d\n"), axis, current);
 	tmc2130_current_h[axis] = current;
 	tmc2130_setup_chopper(axis, tmc2130_mres[axis], tmc2130_current_h[axis], tmc2130_current_r[axis]);
 }
 
 void tmc2130_set_current_r(uint8_t axis, uint8_t current)
 {
-	DBG(_n("tmc2130_set_current_r(axis=%d, current=%d\n"), axis, current);
+	//DBG(_n("tmc2130_set_current_r(axis=%d, current=%d\n"), axis, current);
 	tmc2130_current_r[axis] = current;
 	tmc2130_setup_chopper(axis, tmc2130_mres[axis], tmc2130_current_h[axis], tmc2130_current_r[axis]);
 }
 
 void tmc2130_print_currents()
 {
-	DBG(_n("tmc2130_print_currents()\n\tH\tR\nX\t%d\t%d\nY\t%d\t%d\nZ\t%d\t%d\nE\t%d\t%d\n"),
+	//DBG(_n("tmc2130_print_currents()\n\tH\tR\nX\t%d\t%d\nY\t%d\t%d\nZ\t%d\t%d\nE\t%d\t%d\n"),
 		tmc2130_current_h[0], tmc2130_current_r[0],
 		tmc2130_current_h[1], tmc2130_current_r[1],
 		tmc2130_current_h[2], tmc2130_current_r[2],

@@ -19,7 +19,7 @@
 
 #define _PINDA ((READ(Z_MIN_PIN) != Z_MIN_ENDSTOP_INVERTING)?1:0)
 
-#define DBG(args...) printf_P(args)
+//#define DBG(args...) printf_P(args)
 //#define DBG(args...)
 #define _n PSTR
 
@@ -40,7 +40,7 @@ uint16_t xyzcal_calc_delay(uint16_t nd, uint16_t dd);
 
 void xyzcal_meassure_enter(void)
 {
-	DBG(_n("xyzcal_meassure_enter\n"));
+//DBG(_n("xyzcal_meassure_enter\n"));
 	disable_heater();
 	DISABLE_TEMPERATURE_INTERRUPT();
 #if (defined(FANCHECK) && defined(TACH_1) && (TACH_1 >-1))
@@ -57,7 +57,7 @@ void xyzcal_meassure_enter(void)
 
 void xyzcal_meassure_leave(void)
 {
-	DBG(_n("xyzcal_meassure_leave\n"));
+//DBG(_n("xyzcal_meassure_leave\n"));
     planner_abort_hard();
 	ENABLE_TEMPERATURE_INTERRUPT();
 #if (defined(FANCHECK) && defined(TACH_1) && (TACH_1 >-1))
@@ -169,7 +169,7 @@ bool xyzcal_spiral2(int16_t cx, int16_t cy, int16_t z0, int16_t dz, int16_t radi
 	uint8_t k = 720 / (dad_max - dad_min); //delta calculation constant
 	ad = 0;
 	if (pad) ad = *pad % 720;
-	DBG(_n("xyzcal_spiral2 cx=%d cy=%d z0=%d dz=%d radius=%d ad=%d\n"), cx, cy, z0, dz, radius, ad);
+	//DBG(_n("xyzcal_spiral2 cx=%d cy=%d z0=%d dz=%d radius=%d ad=%d\n"), cx, cy, z0, dz, radius, ad);
 	for (; ad < 720; ad++)
 	{
 		if (radius > 0)
@@ -206,7 +206,7 @@ bool xyzcal_spiral8(int16_t cx, int16_t cy, int16_t z0, int16_t dz, int16_t radi
 	bool ret = false;
 	uint16_t ad = 0;
 	if (pad) ad = *pad;
-	DBG(_n("xyzcal_spiral8 cx=%d cy=%d z0=%d dz=%d radius=%d ad=%d\n"), cx, cy, z0, dz, radius, ad);
+	//DBG(_n("xyzcal_spiral8 cx=%d cy=%d z0=%d dz=%d radius=%d ad=%d\n"), cx, cy, z0, dz, radius, ad);
 	if (!ret && (ad < 720))
 		if (ret = xyzcal_spiral2(cx, cy, z0 - 0*dz, dz, radius, 0, delay_us, check_pinda, &ad))
 			ad += 0;
@@ -226,7 +226,7 @@ bool xyzcal_spiral8(int16_t cx, int16_t cy, int16_t z0, int16_t dz, int16_t radi
 #ifdef XYZCAL_MEASSURE_PINDA_HYSTEREZIS
 int8_t xyzcal_meassure_pinda_hysterezis(int16_t min_z, int16_t max_z, uint16_t delay_us, uint8_t samples)
 {
-	DBG(_n("xyzcal_meassure_pinda_hysterezis\n"));
+	//DBG(_n("xyzcal_meassure_pinda_hysterezis\n"));
 	int8_t ret = -1; // PINDA signal error
 	int16_t z = _Z;
 	int16_t sum_up = 0;
@@ -246,7 +246,7 @@ int8_t xyzcal_meassure_pinda_hysterezis(int16_t min_z, int16_t max_z, uint16_t d
 			up = _Z;
 			if (!xyzcal_lineXYZ_to(_X, _Y, max_z, delay_us, -1)) break;
 			up = _Z - up;
-			DBG(_n("%d. up=%d dn=%d\n"), sample, up, dn);
+			//DBG(_n("%d. up=%d dn=%d\n"), sample, up, dn);
 			sum_up += up;
 			sum_dn += dn;
 			if (abs(up - dn) > XYZCAL_PINDA_HYST_DIF)
@@ -276,7 +276,7 @@ int8_t xyzcal_meassure_pinda_hysterezis(int16_t min_z, int16_t max_z, uint16_t d
 
 void xyzcal_scan_pixels_32x32(int16_t cx, int16_t cy, int16_t min_z, int16_t max_z, uint16_t delay_us, uint8_t* pixels)
 {
-	DBG(_n("xyzcal_scan_pixels_32x32 cx=%d cy=%d min_z=%d max_z=%d\n"), cx, cy, min_z, max_z);
+	//DBG(_n("xyzcal_scan_pixels_32x32 cx=%d cy=%d min_z=%d max_z=%d\n"), cx, cy, min_z, max_z);
 //	xyzcal_lineXYZ_to(cx - 1024, cy - 1024, max_z, 2*delay_us, 0);
 //	xyzcal_lineXYZ_to(cx, cy, max_z, delay_us, 0);
 	int16_t z = (int16_t)count_position[2];
@@ -346,8 +346,8 @@ void xyzcal_scan_pixels_32x32(int16_t cx, int16_t cy, int16_t min_z, int16_t max
 		}
 		if (pixels)
 			for (uint8_t c = 0; c < 32; c++)
-				DBG(_n("%02x"), pixels[((uint16_t)r<<5) + c]);
-		DBG(_n("\n"));
+				// DBG(_n("%02x"), pixels[((uint16_t)r<<5) + c]);
+		// DBG(_n("\n"));
 	}
 //	xyzcal_lineXYZ_to(cx, cy, z, 2*delay_us, 0);
 }
@@ -363,7 +363,7 @@ void xyzcal_histo_pixels_32x32(uint8_t* pixels, uint16_t* histo)
 			histo[pix >> 4]++;
 		}
 	for (uint8_t l = 0; l < 16; l++)
-		DBG(_n(" %2d %d\n"), l, histo[l]);
+		// DBG(_n(" %2d %d\n"), l, histo[l]);
 }
 
 void xyzcal_adjust_pixels(uint8_t* pixels, uint16_t* histo)
@@ -380,7 +380,7 @@ void xyzcal_adjust_pixels(uint8_t* pixels, uint16_t* histo)
 			max_l = l;
 		}
 	}
-	DBG(_n("max_c=%2d max_l=%d\n"), max_c, max_l);
+//	DBG(_n("max_c=%2d max_l=%d\n"), max_c, max_l);
 	for (l = 14; l > 8; l--)
 		if (histo[l] >= 10)
 			break;
@@ -391,7 +391,7 @@ void xyzcal_adjust_pixels(uint8_t* pixels, uint16_t* histo)
 		pix_min = (max_l << 4) / 2;
 	}
 	uint8_t pix_dif = pix_max - pix_min;
-	DBG(_n(" min=%d max=%d dif=%d\n"), pix_min, pix_max, pix_dif);
+//	DBG(_n(" min=%d max=%d dif=%d\n"), pix_min, pix_max, pix_dif);
 	for (int16_t i = 0; i < 32*32; i++)
 	{
 		uint16_t pix = pixels[i];
@@ -406,8 +406,8 @@ void xyzcal_adjust_pixels(uint8_t* pixels, uint16_t* histo)
 	for (uint8_t r = 0; r < 32; r++)
 	{
 		for (uint8_t c = 0; c < 32; c++)
-			DBG(_n("%02x"), pixels[((uint16_t)r<<5) + c]);
-		DBG(_n("\n"));
+//			DBG(_n("%02x"), pixels[((uint16_t)r<<5) + c]);
+//		DBG(_n("\n"));
 	}
 }
 
@@ -468,7 +468,7 @@ int16_t xyzcal_find_pattern_12x12_in_32x32(uint8_t* pixels, uint16_t* pattern, u
 				max_match = match;
 			}
 		}
-	DBG(_n("max_c=%d max_r=%d max_match=%d\n"), max_c, max_r, max_match);
+//	DBG(_n("max_c=%d max_r=%d max_match=%d\n"), max_c, max_r, max_match);
 	if (pc) *pc = max_c;
 	if (pr) *pr = max_r;
 	return max_match;
@@ -650,14 +650,14 @@ int8_t xyzcal_find_point_center(int16_t x0, int16_t y0, int16_t z0, int16_t min_
 /*			if (_pinda != pinda)
 			{
 				if (pinda)
-					DBG(_n("!1 x=%d y=%d\n"), x, y);
+//					DBG(_n("!1 x=%d y=%d\n"), x, y);
 				else
-					DBG(_n("!0 x=%d y=%d\n"), x, y);
+//					DBG(_n("!0 x=%d y=%d\n"), x, y);
 			}*/
 			_pinda = pinda;
 //			DBG(_n("x=%d y=%d rx=%d ry=%d\n"), x, y, rx, ry);
 		}
-		DBG(_n("x_min=%d x_max=%d y_min=%d y_max=%d r_min=%d r_max=%d r_avg=%d\n"), x_min, x_max, y_min, y_max, r_min, r_max, r_sum / 720);
+//		DBG(_n("x_min=%d x_max=%d y_min=%d y_max=%d r_min=%d r_max=%d r_avg=%d\n"), x_min, x_max, y_min, y_max, r_min, r_max, r_sum / 720);
 		if ((n > 2) && (n & 1))
 		{
 			x0 += (x_min + x_max);
@@ -667,7 +667,7 @@ int8_t xyzcal_find_point_center(int16_t x0, int16_t y0, int16_t z0, int16_t min_
 			int rx = (x_max - x_min) / 2;
 			int ry = (y_max - y_min) / 2;
 			r = (rx + ry) / 3;//(rx < ry)?rx:ry;
-			DBG(_n("x0=%d y0=%d r=%d\n"), x0, y0, r);
+//			DBG(_n("x0=%d y0=%d r=%d\n"), x0, y0, r);
 		}
 	}
 	xyzcal_lineXYZ_to(x0, y0, z, 200, 0);
@@ -698,7 +698,7 @@ const uint16_t PROGMEM xyzcal_point_pattern[12] = {0x000, 0x0f0, 0x1f8, 0x3fc, 0
 
 bool xyzcal_searchZ(void)
 {
-	DBG(_n("xyzcal_searchZ x=%ld y=%ld z=%ld\n"), count_position[X_AXIS], count_position[Y_AXIS], count_position[Z_AXIS]);
+//	DBG(_n("xyzcal_searchZ x=%ld y=%ld z=%ld\n"), count_position[X_AXIS], count_position[Y_AXIS], count_position[Z_AXIS]);
 	int16_t x0 = _X;
 	int16_t y0 = _Y;
 	int16_t z0 = _Z;
@@ -713,22 +713,22 @@ bool xyzcal_searchZ(void)
 			int16_t x_on = _X;
 			int16_t y_on = _Y;
 			int16_t z_on = _Z;
-			DBG(_n(" ON-SIGNAL at x=%d y=%d z=%d ad=%d\n"), x_on, y_on, z_on, ad);
+//			DBG(_n(" ON-SIGNAL at x=%d y=%d z=%d ad=%d\n"), x_on, y_on, z_on, ad);
 			return true;
 		}
 		z -= 400;
 	}
-	DBG(_n("xyzcal_searchZ no signal\n x=%ld y=%ld z=%ld\n"), count_position[X_AXIS], count_position[Y_AXIS], count_position[Z_AXIS]);
+//	DBG(_n("xyzcal_searchZ no signal\n x=%ld y=%ld z=%ld\n"), count_position[X_AXIS], count_position[Y_AXIS], count_position[Z_AXIS]);
 	return false;
 }
 
 bool xyzcal_scan_and_process(void)
 {
-	DBG(_n("sizeof(block_buffer)=%d\n"), sizeof(block_t)*BLOCK_BUFFER_SIZE);
+//	DBG(_n("sizeof(block_buffer)=%d\n"), sizeof(block_t)*BLOCK_BUFFER_SIZE);
 //	DBG(_n("sizeof(pixels)=%d\n"), 32*32);
 //	DBG(_n("sizeof(histo)=%d\n"), 2*16);
 //	DBG(_n("sizeof(pattern)=%d\n"), 2*12);
-	DBG(_n("sizeof(total)=%d\n"), 32*32+2*16+2*12);
+//	DBG(_n("sizeof(total)=%d\n"), 32*32+2*16+2*12);
 	bool ret = false;
 	int16_t x = _X;
 	int16_t y = _Y;
@@ -752,12 +752,12 @@ bool xyzcal_scan_and_process(void)
 	uint8_t r = 0;
 	if (xyzcal_find_pattern_12x12_in_32x32(pixels, pattern, &c, &r) > 66) //total pixels=144, corner=12 (1/2 = 66)
 	{
-		DBG(_n(" pattern found at %d %d\n"), c, r);
+//		DBG(_n(" pattern found at %d %d\n"), c, r);
 		c += 6;
 		r += 6;
 		x += ((int16_t)c - 16) << 6;
 		y += ((int16_t)r - 16) << 6;
-		DBG(_n(" x=%d y=%d z=%d\n"), x, y, z);
+//		DBG(_n(" x=%d y=%d z=%d\n"), x, y, z);
 		xyzcal_lineXYZ_to(x, y, z, 200, 0);
 		ret = true;
 	}
@@ -768,7 +768,7 @@ bool xyzcal_scan_and_process(void)
 
 bool xyzcal_find_bed_induction_sensor_point_xy(void)
 {
-	DBG(_n("xyzcal_find_bed_induction_sensor_point_xy x=%ld y=%ld z=%ld\n"), count_position[X_AXIS], count_position[Y_AXIS], count_position[Z_AXIS]);
+//	DBG(_n("xyzcal_find_bed_induction_sensor_point_xy x=%ld y=%ld z=%ld\n"), count_position[X_AXIS], count_position[Y_AXIS], count_position[Z_AXIS]);
 	bool ret = false;
 	st_synchronize();
 	int16_t x = _X;
@@ -777,7 +777,7 @@ bool xyzcal_find_bed_induction_sensor_point_xy(void)
 	uint8_t point = xyzcal_xycoords2point(x, y);
 	x = pgm_read_word_far((uint16_t*)(xyzcal_point_xcoords + point));
 	y = pgm_read_word_far((uint16_t*)(xyzcal_point_ycoords + point));
-	DBG(_n("point=%d x=%d y=%d z=%d\n"), point, x, y, z);
+//	DBG(_n("point=%d x=%d y=%d z=%d\n"), point, x, y, z);
 	xyzcal_meassure_enter();
 	xyzcal_lineXYZ_to(x, y, z, 200, 0);
 	if (xyzcal_searchZ())
