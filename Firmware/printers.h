@@ -3,11 +3,6 @@
 
 #define PRINTER_UNKNOWN 0
 
-#define PRINTER_MK1         100
-#define PRINTER_MK2         200
-#define PRINTER_MK2_MULTIPLEXER    201
-#define PRINTER_MK25        250
-#define PRINTER_MK25_MULTIPLEXER   251
 #define PRINTER_MK3         300
 #define PRINTER_MK3_MULTIPLEXER    301
 

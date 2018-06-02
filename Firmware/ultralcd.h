@@ -236,14 +236,14 @@ extern void lcd_implementation_print(float f);
 extern void lcd_implementation_print_at(uint8_t x, uint8_t y, const char *str);
 
 
-void change_extr(int extr);
+void switch_multiplexer(int extr);
 static void lcd_colorprint_change();
-static int get_ext_nr();
-void extr_adj(int extruder);
-static void extr_adj_0();
-static void extr_adj_1();
-static void extr_adj_2();
-static void extr_adj_3();
+static int get_active_extruder();
+void extruder_load(int extruder);
+static void extruder_load_0();
+static void extruder_load_1();
+static void extruder_load_2();
+static void extruder_load_3();
 static void fil_load_menu();
 static void fil_unload_menu();
 static void extr_unload_0();

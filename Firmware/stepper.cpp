@@ -83,11 +83,6 @@ static volatile bool endstop_z_hit=false;
 #ifdef ABORT_ON_ENDSTOP_HIT_FEATURE_ENABLED
 bool abort_on_endstop_hit = false;
 #endif
-#ifdef MOTOR_CURRENT_PWM_XY_PIN
-  int motor_current_setting[3] = DEFAULT_PWM_MOTOR_CURRENT;
-  int motor_current_setting_silent[3] = DEFAULT_PWM_MOTOR_CURRENT;
-  int motor_current_setting_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
-#endif
 
 static bool old_x_min_endstop=false;
 static bool old_x_max_endstop=false;
@@ -360,7 +355,7 @@ ISR(TIMER1_COMPA_vect) {
   if (e_steps) {
     //WRITE_NC(LOGIC_ANALYZER_CH7, true);
     for (uint8_t i = estep_loops; e_steps && i --;) {
-        WRITE_NC(E0_STEP_PIN, !INVERT_E_STEP_PIN);
+        WRITE_NC(E0_STEP_PIN, !INVERT_E_STEP_PIN); 
         -- e_steps;
         WRITE_NC(E0_STEP_PIN, INVERT_E_STEP_PIN);
     }
@@ -473,7 +468,7 @@ FORCE_INLINE void stepper_next_block()
       WRITE(E0_DIR_PIN, 
   #ifdef MULTIPLEXER
         (multiplexer_extruder == 0 || multiplexer_extruder == 2) ? !INVERT_E0_DIR :
-  #endif // MULTIPLEXER
+  #endif
         INVERT_E0_DIR);
 #endif /* LIN_ADVANCE */
       count_direction[E_AXIS] = -1;
@@ -482,7 +477,7 @@ FORCE_INLINE void stepper_next_block()
       WRITE(E0_DIR_PIN,
   #ifdef MULTIPLEXER
         (multiplexer_extruder == 0 || multiplexer_extruder == 2) ? INVERT_E0_DIR :
-  #endif // MULTIPLEXER
+  #endif
         !INVERT_E0_DIR);
 #endif /* LIN_ADVANCE */
       count_direction[E_AXIS] = 1;
@@ -827,16 +822,16 @@ FORCE_INLINE void isr() {
         //WRITE_NC(LOGIC_ANALYZER_CH7, true);
         // Set the step direction.
         {
-          bool neg = e_steps < 0;
+          bool negative_steps = e_steps < 0;
           bool dir =
         #ifdef MULTIPLEXER
-            (neg == (multiplexer_extruder & 1))
+            (negative_steps == (multiplexer_extruder & 1))
         #else
-            neg
+            negative_steps
         #endif
-            ? INVERT_E0_DIR : !INVERT_E0_DIR; //If we have MULTIPLEXER, reverse every second extruder.
+          ? INVERT_E0_DIR : !INVERT_E0_DIR; //If we have MULTIPLEXER, reverse every second extruder.
           WRITE_NC(E0_DIR_PIN, dir);
-          if (neg)
+          if (negative_steps)
             // Flip the e_steps counter to be always positive.
             e_steps = - e_steps;
         }
@@ -1448,29 +1443,6 @@ void st_current_init() //Initialize Digipot Motor Current
 {  
 uint8_t SilentMode = eeprom_read_byte((uint8_t*)EEPROM_SILENT);
   SilentModeMenu = SilentMode;
-  #ifdef MOTOR_CURRENT_PWM_XY_PIN
-    pinMode(MOTOR_CURRENT_PWM_XY_PIN, OUTPUT);
-    pinMode(MOTOR_CURRENT_PWM_Z_PIN, OUTPUT);
-    pinMode(MOTOR_CURRENT_PWM_E_PIN, OUTPUT);
-    if((SilentMode == SILENT_MODE_OFF) || (farm_mode) ){
-
-     motor_current_setting[0] = motor_current_setting_loud[0];
-     motor_current_setting[1] = motor_current_setting_loud[1];
-     motor_current_setting[2] = motor_current_setting_loud[2];
-
-    }else{
-
-     motor_current_setting[0] = motor_current_setting_silent[0];
-     motor_current_setting[1] = motor_current_setting_silent[1];
-     motor_current_setting[2] = motor_current_setting_silent[2];
-
-    }
-    st_current_set(0, motor_current_setting[0]);
-    st_current_set(1, motor_current_setting[1]);
-    st_current_set(2, motor_current_setting[2]);
-    //Set timer5 to 31khz so the PWM of the motor power is as constant as possible. (removes a buzzing noise)
-    TCCR5B = (TCCR5B & ~(_BV(CS50) | _BV(CS51) | _BV(CS52))) | _BV(CS50);
-  #endif
 }
 
 
@@ -1478,11 +1450,6 @@ uint8_t SilentMode = eeprom_read_byte((uint8_t*)EEPROM_SILENT);
 
 void st_current_set(uint8_t driver, int current)
 {
-  #ifdef MOTOR_CURRENT_PWM_XY_PIN
-  if (driver == 0) analogWrite(MOTOR_CURRENT_PWM_XY_PIN, (long)current * 255L / (long)MOTOR_CURRENT_PWM_RANGE);
-  if (driver == 1) analogWrite(MOTOR_CURRENT_PWM_Z_PIN, (long)current * 255L / (long)MOTOR_CURRENT_PWM_RANGE);
-  if (driver == 2) analogWrite(MOTOR_CURRENT_PWM_E_PIN, (long)current * 255L / (long)MOTOR_CURRENT_PWM_RANGE);
-  #endif
 }
 
 void microstep_init()

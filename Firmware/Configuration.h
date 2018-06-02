@@ -30,9 +30,6 @@
 
 #include "Configuration_prusa.h"
 
-// This defines the number of extruders
-#define EXTRUDERS 1
-
 // Optional unique identifier for this printer, used by some programs to differentiate between machines.
 // http://www.uuidgenerator.net/version4
 // #define MACHINE_UUID "00000000-0000-0000-0000-000000000000"

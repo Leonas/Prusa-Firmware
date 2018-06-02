@@ -225,10 +225,10 @@ static void lcd_settings_menu_back();
 
 static void lcd_colorprint_change(); 
 #ifdef MULTIPLEXER 
-static void extr_adj_0(); 
-static void extr_adj_1(); 
-static void extr_adj_2(); 
-static void extr_adj_3(); 
+static void extruder_load_0(); 
+static void extruder_load_1(); 
+static void extruder_load_2(); 
+static void extruder_load_3(); 
 static void fil_load_menu(); 
 static void fil_unload_menu(); 
 static void extr_unload_0(); 
@@ -4055,7 +4055,7 @@ void lcd_wizard(int state) {
 			lcd_implementation_clear();
 			lcd_print_at_PGM(0, 2, MSG_LOADING_FILAMENT);
 #ifdef MULTIPLEXER
-			change_extr(0);
+			switch_multiplexer(0);
 #endif
 			gcode_M701();
 #ifdef PAT9125
@@ -5098,7 +5098,7 @@ static void extr_mov(float shift, float feed_rate) { //move extruder no matter w
 }
 
 
-void change_extr(int extr) { //switches multiplexer for extruders
+void switch_multiplexer(int extr) { //switches multiplexer for extruders
 	st_synchronize();
 	delay(100);
 
@@ -5111,32 +5111,28 @@ void change_extr(int extr) { //switches multiplexer for extruders
 	pinMode(E_MUX0_PIN, OUTPUT);
 	pinMode(E_MUX1_PIN, OUTPUT);
 
-	switch (extr) {
+	switch (multiplexer_extruder) {
 	case 1:
 		WRITE(E_MUX0_PIN, HIGH);
 		WRITE(E_MUX1_PIN, LOW);
-		
 		break;
 	case 2:
 		WRITE(E_MUX0_PIN, LOW);
 		WRITE(E_MUX1_PIN, HIGH);
-		
 		break;
 	case 3:
 		WRITE(E_MUX0_PIN, HIGH);
 		WRITE(E_MUX1_PIN, HIGH);
-		
 		break;
 	default:
 		WRITE(E_MUX0_PIN, LOW);
 		WRITE(E_MUX1_PIN, LOW);
-		
 		break;
 	}
 	delay(100);
 }
 
-static int get_ext_nr() { //reads multiplexer input pins and return current extruder number (counted from 0)
+static int get_active_extruder() { //reads multiplexer input pins and return current extruder number (counted from 0)
 	return(2 * READ(E_MUX1_PIN) + READ(E_MUX0_PIN));
 }
 
@@ -5150,11 +5146,10 @@ void display_loading() {
 	}
 }
 
-void extr_adj(int extruder) //loading filament for MULTIPLEXER
+void extruder_load(int extruder) //loading filament for MULTIPLEXER
 {
 	bool correct;
 	max_feedrate[E_AXIS] =80;
-	//max_feedrate[E_AXIS] = 50;
 	START:
 	lcd_implementation_clear();
 	lcd.setCursor(0, 0); 
@@ -5267,45 +5262,45 @@ void extr_unload() { //unloads filament
 }
 
 //wrapper functions for loading filament
-static void extr_adj_0(){
-	change_extr(0);
-	extr_adj(0);
+static void extruder_load_0(){
+	switch_multiplexer(0);
+	extruder_load(0);
 }
-static void extr_adj_1() {
-	change_extr(1);
-	extr_adj(1);
+static void extruder_load_1() {
+	switch_multiplexer(1);
+	extruder_load(1);
 }
-static void extr_adj_2() {
-	change_extr(2);
-	extr_adj(2);
+static void extruder_load_2() {
+	switch_multiplexer(2);
+	extruder_load(2);
 }
-static void extr_adj_3() {
-	change_extr(3);
-	extr_adj(3);
+static void extruder_load_3() {
+	switch_multiplexer(3);
+	extruder_load(3);
 }
 
 static void load_all() {
 	for (int i = 0; i < 4; i++) {
-		change_extr(i);
-		extr_adj(i);
+		switch_multiplexer(i);
+		extruder_load(i);
 	}
 }
 
 //wrapper functions for changing extruders
 static void extr_change_0() {
-	change_extr(0);
+	switch_multiplexer(0);
 	lcd_return_to_status();
 }
 static void extr_change_1() {
-	change_extr(1);
+	switch_multiplexer(1);
 	lcd_return_to_status();
 }
 static void extr_change_2() {
-	change_extr(2);
+	switch_multiplexer(2);
 	lcd_return_to_status();
 }
 static void extr_change_3() {
-	change_extr(3);
+	switch_multiplexer(3);
 	lcd_return_to_status();
 }
 
@@ -5313,7 +5308,7 @@ static void extr_change_3() {
 void extr_unload_all() {
 	if (degHotend0() > EXTRUDE_MINTEMP) {
 		for (int i = 0; i < 4; i++) {
-			change_extr(i);
+			switch_multiplexer(i);
 			extr_unload();
 		}
 	}
@@ -5335,7 +5330,7 @@ void extr_unload_used() {
 	if (degHotend0() > EXTRUDE_MINTEMP) {
 		for (int i = 0; i < 4; i++) {
 			if (multiplexer_filaments_used & (1 << i)) {
-				change_extr(i);
+				switch_multiplexer(i);
 				extr_unload();
 			}
 		}
@@ -5356,19 +5351,19 @@ void extr_unload_used() {
 
 
 static void extr_unload_0() {
-	change_extr(0);
+	switch_multiplexer(0);
 	extr_unload();
 }
 static void extr_unload_1() {
-	change_extr(1);
+	switch_multiplexer(1);
 	extr_unload();
 }
 static void extr_unload_2() {
-	change_extr(2);
+	switch_multiplexer(2);
 	extr_unload();
 }
 static void extr_unload_3() {
-	change_extr(3);
+	switch_multiplexer(3);
 	extr_unload();
 }
 
@@ -5378,10 +5373,10 @@ static void fil_load_menu()
 	START_MENU();
 	MENU_ITEM(back, MSG_MAIN, 0);
 	MENU_ITEM(function, MSG_LOAD_ALL, load_all);
-	MENU_ITEM(function, MSG_LOAD_FILAMENT_1, extr_adj_0);
-	MENU_ITEM(function, MSG_LOAD_FILAMENT_2, extr_adj_1);
-	MENU_ITEM(function, MSG_LOAD_FILAMENT_3, extr_adj_2);
-	MENU_ITEM(function, MSG_LOAD_FILAMENT_4, extr_adj_3);
+	MENU_ITEM(function, MSG_LOAD_FILAMENT_1, extruder_load_0);
+	MENU_ITEM(function, MSG_LOAD_FILAMENT_2, extruder_load_1);
+	MENU_ITEM(function, MSG_LOAD_FILAMENT_3, extruder_load_2);
+	MENU_ITEM(function, MSG_LOAD_FILAMENT_4, extruder_load_3);
 	
 	END_MENU();
 }
@@ -5399,7 +5394,7 @@ static void fil_unload_menu()
 	END_MENU();
 }
 
-static void change_extr_menu(){
+static void switch_multiplexer_menu(){
 	START_MENU();
 	MENU_ITEM(back, MSG_MAIN, 0);
 	MENU_ITEM(function, MSG_EXTRUDER_1, extr_change_0);
@@ -5780,7 +5775,7 @@ static void lcd_main_menu()
   } 
   else 
   {
-	#ifndef MULTIPLEXER
+#ifndef MULTIPLEXER
 #ifdef PAT9125
 	if ( ((filament_autoload_enabled == true) && (fsensor_enabled == true)))
         MENU_ITEM(submenu, MSG_AUTOLOAD_FILAMENT, lcd_menu_AutoLoadFilament);
@@ -5788,12 +5783,12 @@ static void lcd_main_menu()
 #endif //PAT9125
 		MENU_ITEM(function, MSG_LOAD_FILAMENT, lcd_LoadFilament);
 	MENU_ITEM(submenu, MSG_UNLOAD_FILAMENT, lcd_unLoadFilament);
-	#endif
-	#ifdef MULTIPLEXER
+#endif
+#ifdef MULTIPLEXER
 	MENU_ITEM(submenu, MSG_LOAD_FILAMENT, fil_load_menu);
 	MENU_ITEM(submenu, MSG_UNLOAD_FILAMENT, fil_unload_menu);
-	MENU_ITEM(submenu, MSG_CHANGE_EXTR, change_extr_menu);
-	#endif
+	MENU_ITEM(submenu, MSG_CHANGE_EXTR, switch_multiplexer_menu);
+#endif
 	MENU_ITEM(submenu, MSG_SETTINGS, lcd_settings_menu);
     if(!isPrintPaused) MENU_ITEM(submenu, MSG_MENU_CALIBRATION, lcd_calibration_menu);
 

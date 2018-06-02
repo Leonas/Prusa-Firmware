@@ -9,8 +9,9 @@
   #error Oops!  Make sure you have 'Arduino Mega 2560 or Rambo' selected from the 'Tools -> Boards' menu.
 #endif
 
-#define TMC2130
-#define UVLO_SUPPORT
+#define TMC2130      // Trinamic Stepper Motor Drivers
+#define UVLO_SUPPORT // Under Voltage Lockout Support
+
 
 #define AMBIENT_THERMISTOR
 #define PINDA_THERMISTOR
@@ -92,9 +93,6 @@
 #ifdef MULTIPLEXER
 #define E_MUX0_PIN         17
 #define E_MUX1_PIN         16
-//#define E1_STEP_PIN         33
-//#define E1_DIR_PIN          42
-//#define E1_ENABLE_PIN       25
 #endif
 
 #define SDPOWER             -1

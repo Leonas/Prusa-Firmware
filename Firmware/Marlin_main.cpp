@@ -2331,7 +2331,7 @@ void gcode_M114()
 void gcode_M701()
 {
 #ifdef MULTIPLEXER
-	extr_adj(multiplexer_extruder);//loads current extruder
+	extruder_load(multiplexer_extruder);//loads current extruder
 #else
 	enable_z();
 	custom_message = true;
@@ -2442,7 +2442,7 @@ void process_commands()
   // PRUSA GCODES
   KEEPALIVE_STATE(IN_HANDLER);
 
-#ifdef MULTIPLEXER
+#ifdef MULTIPLEXER //PROBLEM
   float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
   float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
   int8_t SilentMode;
@@ -5432,16 +5432,16 @@ void process_commands()
 			}
 			else
 			{
-#ifdef MULTIPLEXER
-
-#else
-#ifdef FILAMENTCHANGE_FINALRETRACT
-				target[E_AXIS] += FILAMENTCHANGE_FINALRETRACT;
-#endif
-#endif // MULTIPLEXER
+        //#ifdef MULTIPLEXER
+        // do something
+        //#else
+        //  #ifdef FILAMENTCHANGE_FINALRETRACT
+        //				target[E_AXIS] += FILAMENTCHANGE_FINALRETRACT;
+        //  #endif
+        //#endif // MULTIPLEXER
 			}
 
-#ifdef MULTIPLEXER
+#ifdef MULTIPLEXER //WHAT DOES THIS DO?
 			target[E_AXIS] += 12;
 			plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 3500, active_extruder);
 			target[E_AXIS] += 6;
@@ -6158,7 +6158,7 @@ void process_commands()
 		  }
 		  delay(100);
 
-#else
+#else //end multiplexer
 		  if (tmp_extruder >= EXTRUDERS) {
 			  SERIAL_ECHO_START;
 			  SERIAL_ECHOPGM("T");

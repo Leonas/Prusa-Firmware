@@ -21,8 +21,41 @@
 #define STEEL_SHEET
 #define HAS_SECOND_SERIAL_PORT
 
-// Prusa Single extruder multiple material support
+// single extruder driver multiple material support
+#define EXTRUDERS 1
 #define MULTIPLEXER
+
+/*------------------------------------
+ MOTOR CURRENT SETTINGS
+ *------------------------------------*/
+
+// // Motor Current setting for BIG RAMBo
+// #define DIGIPOT_MOTOR_CURRENT {135,135,135,135,135} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
+// #define DIGIPOT_MOTOR_CURRENT_LOUD {135,135,135,135,135}
+// 
+// // Motor Current settings for RAMBo mini PWM value = MotorCurrentSetting * 255 / range
+// #if MOTHERBOARD == BOARD_RAMBO_MINI_1_0 || MOTHERBOARD == BOARD_RAMBO_MINI_1_3
+// #define MOTOR_CURRENT_PWM_RANGE 2000
+// #define DEFAULT_PWM_MOTOR_CURRENT  {400, 750, 750} // {XY,Z,E}
+// #define DEFAULT_PWM_MOTOR_CURRENT_LOUD  {400, 750, 750} // {XY,Z,E}
+// #endif
+
+#ifdef MULTIPLEXER
+#define BOWDEN_LENGTH 433 //default total length for filament fast loading part
+#define FIL_LOAD_LENGTH 102 //length for loading filament into the nozzle
+#define FIL_COOLING 10 //length for cooling moves
+#define E_MOTOR_LOW_CURRENT 350 // current for PRUSA code // NEEDS FIX FOR NEW DRIVERS
+#define E_MOTOR_HIGH_CURRENT 700 //current for unloading filament, stop print //NEEDS FIX FOR NEW DRIVERS
+#endif //MULTIPLEXER
+
+
+#define TMC2130_CURRENTS_H {16, 20, 35, 30}  // default holding currents for all axes
+#define TMC2130_CURRENTS_R {16, 20, 35, 30}  // default running currents for all axes
+#define TMC2130_UNLOAD_CURRENT_R 12			     // lower current for M600 to protect filament sensor 
+
+#define TMC2130_STEALTH_Z
+
+
 
 // Uncomment the below for the E3D PT100 temperature sensor (with or without PT100 Amplifier)
 //#define E3D_PT100_EXTRUDER_WITH_AMP
@@ -36,9 +69,7 @@
  *------------------------------------*/
 
 // Steps per unit {X,Y,Z,E}
-//#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,140}
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,280} // Use 140 is 280 is too fast for MMU
-//#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,560}
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,280} // Use 140 if 280 is too fast for multiplexer
 
 // Endstop inverting
 #define X_MIN_ENDSTOP_INVERTING 0 // set to true to invert the logic of the endstop.
@@ -46,12 +77,12 @@
 #define Z_MIN_ENDSTOP_INVERTING 0 // set to true to invert the logic of the endstop.
 
 // Direction inverting
-#define INVERT_X_DIR true    // for Mendel set to false, for Orca set to true
-#define INVERT_Y_DIR false    // for Mendel set to true, for Orca set to false
-#define INVERT_Z_DIR true     // for Mendel set to false, for Orca set to true
-#define INVERT_E0_DIR false   // for direct drive extruder v9 set to true, for geared extruder set to false
-#define INVERT_E1_DIR false    // for direct drive extruder v9 set to true, for geared extruder set to false
-#define INVERT_E2_DIR false   // for direct drive extruder v9 set to true, for geared extruder set to false
+#define INVERT_X_DIR true    
+#define INVERT_Y_DIR false   
+#define INVERT_Z_DIR true   
+#define INVERT_E0_DIR false
+#define INVERT_E1_DIR false
+#define INVERT_E2_DIR false
 
 // Home position
 #define MANUAL_X_HOME_POS 0
@@ -78,19 +109,11 @@
 #define NUM_AXIS 4 // The axis order in all axis related arrays is X, Y, Z, E
 #define HOMING_FEEDRATE {3000, 3000, 800, 0}  // set the homing speeds (mm/min) // 3000 is also valid for stallGuard homing. Valid range: 2200 - 3000
 
-//#define DEFAULT_Y_OFFSET    4.f // Default distance of Y_MIN_POS point from endstop, when the printer is not calibrated.
-/**
- * [0,0] steel sheet print area point X coordinate in bed print area coordinates
- */
-#define SHEET_PRINT_ZERO_REF_X 0.f
-/**
- * [0,0] steel sheet print area point Y coordinate in bed print area coordinates
- */
-#define SHEET_PRINT_ZERO_REF_Y -2.f
+#define SHEET_PRINT_ZERO_REF_X 0.f //[0,0] steel sheet print area point X coordinate in bed print area coordinates
+#define SHEET_PRINT_ZERO_REF_Y -2.f //[0,0] steel sheet print area point Y coordinate in bed print area coordinates
 
 #define DEFAULT_MAX_FEEDRATE          {200, 200, 12, 120}      // (mm/sec)   max feedrate (M203)
 #define DEFAULT_MAX_ACCELERATION      {1000, 1000, 200, 5000}  // (mm/sec^2) max acceleration (M201)
-
 
 #define DEFAULT_ACCELERATION          1250   // X, Y, Z and E max acceleration in mm/s^2 for printing moves (M204S)
 #define DEFAULT_RETRACT_ACCELERATION  1250   // X, Y, Z and E max acceleration in mm/s^2 for retracts (M204T)
@@ -98,12 +121,12 @@
 #define MANUAL_FEEDRATE {2700, 2700, 1000, 100}   // set the speeds for manual moves (mm/min)
 
 //Silent mode limits
-#define SILENT_MAX_ACCEL  960 // max axxeleration in silent mode in mm/s^2
+#define SILENT_MAX_ACCEL  960 // max acceleration in silent mode in mm/s^2
 #define SILENT_MAX_ACCEL_ST (100*SILENT_MAX_ACCEL) // max accel in steps/s^2
 #define SILENT_MAX_FEEDRATE 172  //max feedrate in mm/s, because mode switched to normal for homming , this value limits also homing, it should be greater (172mm/s=9600mm/min>2700mm/min)
 
 //Normal mode limits
-#define NORMAL_MAX_ACCEL 2500 // Y-axis max axxeleration in normal mode in mm/s^2
+#define NORMAL_MAX_ACCEL 2500 // Y-axis max acceleration in normal mode in mm/s^2
 #define NORMAL_MAX_ACCEL_ST (100*NORMAL_MAX_ACCEL) // max accel in steps/s^2
 #define NORMAL_MAX_FEEDRATE 200  //max feedrate in mm/s, because mode switched to normal for homming , this value limits also homing, it should be greater (172mm/s=9600mm/min>2700mm/min)
 
@@ -126,17 +149,15 @@
 // Watchdog support
 #define WATCHDOG
 
-// Power panic
+
 #define UVLO_SUPPORT
 
-// Fan check
 #define FANCHECK
 
-// Safety timer
-//#define SAFETYTIMER  // Removed for MMU
+#define SAFETYTIMER
 
 // Filament sensor
-// #define PAT9125 // removed for MMU
+// #define PAT9125 // removed for multiplexer
 
 
 // Disable some commands
@@ -182,15 +203,17 @@
 #endif /* DEBUG_BUILD */
 
 //#define EXPERIMENTAL_FEATURES
-#define TMC2130_LINEARITY_CORRECTION
-#define TMC2130_LINEARITY_CORRECTION_XYZ
-//#define TMC2130_VARIABLE_RESOLUTION
 
 
 
 /*------------------------------------
- TMC2130 default settings
+ TMC2130 
  *------------------------------------*/
+
+#define TMC2130_LINEARITY_CORRECTION
+#define TMC2130_LINEARITY_CORRECTION_XYZ
+//#define TMC2130_VARIABLE_RESOLUTION
+
 
 #define TMC2130_FCLK 12000000       // fclk = 12MHz
 
@@ -211,15 +234,15 @@
 #define TMC2130_PWM_AUTO_Y  1         // PWMCONF
 #define TMC2130_PWM_FREQ_Y  2         // PWMCONF
 
-#define TMC2130_PWM_GRAD_E  2         // PWMCONF
-#define TMC2130_PWM_AMPL_E  235       // PWMCONF
-#define TMC2130_PWM_AUTO_E  1         // PWMCONF
-#define TMC2130_PWM_FREQ_E  2         // PWMCONF
-
 #define TMC2130_PWM_GRAD_Z  4         // PWMCONF
 #define TMC2130_PWM_AMPL_Z  200       // PWMCONF
 #define TMC2130_PWM_AUTO_Z  1         // PWMCONF
 #define TMC2130_PWM_FREQ_Z  2         // PWMCONF
+
+// #define TMC2130_PWM_GRAD_E  2         // PWMCONF
+// #define TMC2130_PWM_AMPL_E  235       // PWMCONF
+// #define TMC2130_PWM_AUTO_E  1         // PWMCONF
+// #define TMC2130_PWM_FREQ_E  2         // PWMCONF
 
 #define TMC2130_PWM_GRAD_E  4         // PWMCONF
 #define TMC2130_PWM_AMPL_E  240       // PWMCONF
@@ -254,12 +277,6 @@
 #define TMC2130_SG_THRS_Z       4     // stallguard sensitivity for Z axis
 #define TMC2130_SG_THRS_E       3     // stallguard sensitivity for E axis
 
-//new settings is possible for vsense = 1, running current value > 31 set vsense to zero and shift both currents by 1 bit right (Z axis only)
-#define TMC2130_CURRENTS_H {16, 20, 35, 30}  // default holding currents for all axes
-#define TMC2130_CURRENTS_R {16, 20, 35, 30}  // default running currents for all axes
-#define TMC2130_UNLOAD_CURRENT_R 12			 // lowe current for M600 to protect filament sensor 
-
-#define TMC2130_STEALTH_Z
 
 //#define TMC2130_DEBUG
 //#define TMC2130_DEBUG_WR
@@ -326,14 +343,6 @@
 #define UNLOAD_FILAMENT_0 "M83"
 #define UNLOAD_FILAMENT_1 "G1 E-80 F7000"
 
-#ifdef MULTIPLEXER
-//#define BOWDEN_LENGTH	408
-#define BOWDEN_LENGTH 433 //default total length for filament fast loading part; max length for extrusion is 465 mm!; this length can be adjusted in service menu
-#define FIL_LOAD_LENGTH 102 //length for loading filament into the nozzle
-#define FIL_COOLING 10 //length for cooling moves
-#define E_MOTOR_LOW_CURRENT 350 // current for PRUSAY code
-#define E_MOTOR_HIGH_CURRENT 700 //current for unloading filament, stop print, PRUSAY ramming
-#endif //MULTIPLEXER
 
 
 /*------------------------------------
@@ -380,20 +389,7 @@
 #define TEMP_RUNAWAY_EXTRUDER_HYSTERESIS 15
 #define TEMP_RUNAWAY_EXTRUDER_TIMEOUT 45
 
-/*------------------------------------
- MOTOR CURRENT SETTINGS
- *------------------------------------*/
 
-// Motor Current setting for BIG RAMBo
-#define DIGIPOT_MOTOR_CURRENT {135,135,135,135,135} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
-#define DIGIPOT_MOTOR_CURRENT_LOUD {135,135,135,135,135}
-
-// Motor Current settings for RAMBo mini PWM value = MotorCurrentSetting * 255 / range
-#if MOTHERBOARD == BOARD_RAMBO_MINI_1_0 || MOTHERBOARD == BOARD_RAMBO_MINI_1_3
-#define MOTOR_CURRENT_PWM_RANGE 2000
-#define DEFAULT_PWM_MOTOR_CURRENT  {400, 750, 750} // {XY,Z,E}
-#define DEFAULT_PWM_MOTOR_CURRENT_LOUD  {400, 750, 750} // {XY,Z,E}
-#endif
 
 /*------------------------------------
  PAT9125 FILAMENT SENSOR SETTINGS
