@@ -9,29 +9,17 @@
 // Firmware version
 #define FW_VERSION "3.2.1"
 #define FW_COMMIT_NR   576
-// FW_VERSION_UNKNOWN means this is an unofficial build.
-// The firmware should only be checked into github with this symbol.
-#define FW_DEV_VERSION FW_VERSION_UNKNOWN
+#define FW_DEV_VERSION FW_VERSION_UNKNOWN // FW_VERSION_UNKNOWN = unofficial build
 #define FW_REPOSITORY "Unknown"
 #define FW_VERSION_FULL FW_VERSION "-" STR(FW_COMMIT_NR)
 
-// Debug version has debugging enabled (the symbol DEBUG_BUILD is set).
-// The debug build may be a bit slower than the non-debug build, therefore the debug build should
-// not be shipped to a customer.
+// Debug version must have #define DEBUG_BUILD
 #define FW_VERSION_DEBUG    6
-// This is a development build. A development build is either built from an unofficial git repository, 
-// or from an unofficial branch, or it does not have a label set. Only the build server should set this build type.
 #define FW_VERSION_DEVEL    5
-// This is an alpha release. Only the build server should set this build type.
 #define FW_VERSION_ALPHA    4
-// This is a beta release. Only the build server should set this build type.
 #define FW_VERSION_BETA     3
-// This is a release candidate build. Only the build server should set this build type.
 #define FW_VERSION_RC       2
-// This is a final release. Only the build server should set this build type.
-#define FW_VERSION_GOLD     1
-// This is an unofficial build. The firmware should only be checked into github with this symbol,
-// the build server shall never produce builds with this build type.
+#define FW_VERSION_GOLD     1  //release version
 #define FW_VERSION_UNKNOWN  0
 
 #if FW_DEV_VERSION == FW_VERSION_DEBUG
@@ -42,10 +30,16 @@
 
 #include "Configuration_prusa.h"
 
+// This defines the number of extruders
+#define EXTRUDERS 1
+
+// Optional unique identifier for this printer, used by some programs to differentiate between machines.
+// http://www.uuidgenerator.net/version4
+// #define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
+
 #define FW_PRUSA3D_MAGIC "PRUSA3DFW"
 #define FW_PRUSA3D_MAGIC_LEN 10
 
-// The total size of the EEPROM is 4096 for the Atmega2560
 #define EEPROM_TOP 4096
 #define EEPROM_SILENT 4095
 #define EEPROM_LANG 4094
@@ -210,12 +204,7 @@
 #define SERIAL_PORT 0
 #define BAUDRATE 115200
 
-// Define this to set a unique identifier for this printer, (Used by some programs to differentiate between machines)
-// You can use an online service to generate a random UUID. (eg http://www.uuidgenerator.net/version4)
-// #define MACHINE_UUID "00000000-0000-0000-0000-000000000000"
 
-// This defines the number of extruders
-#define EXTRUDERS 1
 
 #define POWER_SUPPLY 1
 
@@ -234,8 +223,9 @@
 #define BANG_MAX 255 // limits current to nozzle while in bang-bang mode; 255=full current
 #define PID_MAX BANG_MAX // limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #ifdef PIDTEMP
-  #define PID_FUNCTIONAL_RANGE 10 // If the temperature difference between the target temperature and the actual temperature
-                                  // is more then PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
+// If the temperature difference between the target temperature and the actual temperature
+// is more then PID_FUNCTIONAL_RANGE then the PID will be shut off and the heater will be set to min/max.
+  #define PID_FUNCTIONAL_RANGE 10 
   #define PID_INTEGRAL_DRIVE_MAX PID_MAX  //limit for the integral term
   #define K1 0.95 //smoothing factor within the PID
   #define PID_dT ((OVERSAMPLENR * 10.0)/(F_CPU / 64.0 / 256.0)) //sampling period of the temperature routine
@@ -317,9 +307,6 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 
 #define Z_HEIGHT_HIDE_LIVE_ADJUST_MENU 2.0f
 
-//============================= Bed Auto Leveling ===========================
-
-#define Z_PROBE_REPEATABILITY_TEST  // If not commented out, Z-Probe Repeatability test will be included if Auto Bed Leveling is Enabled.
 
 #define DEFAULT_XJERK                10       // (mm/sec)
 #define DEFAULT_YJERK                10       // (mm/sec)
@@ -339,22 +326,6 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #endif
 
 
-// EEPROM
-// The microcontroller can store settings in the EEPROM, e.g. max velocity...
-// M500 - stores parameters in EEPROM
-// M501 - reads parameters from EEPROM (if you need reset them after you changed them temporarily).
-// M502 - reverts to the default "factory settings".  You still need to store them in EEPROM afterwards if you want to.
-//define this to enable EEPROM support
-//#define EEPROM_SETTINGS
-//to disable EEPROM Serial responses and decrease program space by ~1700 byte: comment this out:
-// please keep turned on if you can.
-//#define EEPROM_CHITCHAT
-
-// Host Keepalive
-//
-// When enabled Marlin will send a busy status message to the host
-// every couple of seconds when it can't accept commands.
-//
 #define HOST_KEEPALIVE_FEATURE    // Disable this if your host doesn't like keepalive messages
 #define HOST_KEEPALIVE_INTERVAL 2 // Number of seconds between "busy" messages. Set with M113.
 
@@ -368,14 +339,6 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 // http://reprap.org/wiki/RepRapDiscount_Smart_Controller
 #define REPRAP_DISCOUNT_SMART_CONTROLLER
 
-
-//automatic expansion
-#if defined (MAKRPANEL)
- #define SDSUPPORT
- #define ULTIPANEL
- #define NEWPANEL
- #define DEFAULT_LCD_CONTRAST 17
-#endif
 
 #if defined(ULTIMAKERCONTROLLER) || defined(REPRAP_DISCOUNT_SMART_CONTROLLER) || defined(G3D_PANEL)
  #define ULTIPANEL
@@ -424,51 +387,17 @@ const bool Z_MAX_ENDSTOP_INVERTING = true; // set to true to invert the logic of
 #endif
 
 
-// Increase the FAN pwm frequency. Removes the PWM noise but increases heating in the FET/Arduino
-//#define FAST_PWM_FAN
-
-// Temperature status LEDs that display the hotend and bet temperature.
-// If all hotends and bed temperature and temperature setpoint are < 54C then the BLUE led is on.
-// Otherwise the RED led is on. There is 1C hysteresis.
-//#define TEMP_STAT_LEDS
-
-// Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
-// which is not ass annoying as with the hardware PWM. On the other hand, if this frequency
-// is too low, you should also increment SOFT_PWM_SCALE.
-//#define FAN_SOFT_PWM
-
-// Incrementing this by 1 will double the software PWM frequency,
-// affecting heaters, and the fan if FAN_SOFT_PWM is enabled.
-// However, control resolution will be halved for each increment;
-// at zero value, there are 128 effective control positions.
-#define SOFT_PWM_SCALE 0
-
-
-#define DEFAULT_NOMINAL_FILAMENT_DIA  1.75  //Diameter (in mm). Used by the volumetric extrusion.
+#define DEFAULT_NOMINAL_FILAMENT_DIA  1.75
 
 // Calibration status of the machine, to be stored into the EEPROM,
-// (unsigned char*)EEPROM_CALIBRATION_STATUS
 enum CalibrationStatus
 {
-	// Freshly assembled, needs to peform a self-test and the XYZ calibration.
-	CALIBRATION_STATUS_ASSEMBLED = 255,
-
-	// For the wizard: self test has been performed, now the XYZ calibration is needed.
-	CALIBRATION_STATUS_XYZ_CALIBRATION = 250,
-
-	// For the wizard: factory assembled, needs to run Z calibration.
-	CALIBRATION_STATUS_Z_CALIBRATION = 240,
-
-	// The XYZ calibration has been performed, now it remains to run the V2Calibration.gcode.
-	CALIBRATION_STATUS_LIVE_ADJUST = 230,
-
-    // Calibrated, ready to print.
-    CALIBRATION_STATUS_CALIBRATED = 1,
-
-    // Legacy: resetted by issuing a G86 G-code.
-    // This value can only be expected after an upgrade from the initial MK2 firmware releases.
-    // Currently the G86 sets the calibration status to 
-    CALIBRATION_STATUS_UNKNOWN = 0,
+	CALIBRATION_STATUS_ASSEMBLED = 255,       // Freshly assembled, needs to peform a self-test and the XYZ calibration.
+	CALIBRATION_STATUS_XYZ_CALIBRATION = 250, // For the wizard: self test has been performed, now the XYZ calibration is needed.
+	CALIBRATION_STATUS_Z_CALIBRATION = 240,   // For the wizard: factory assembled, needs to run Z calibration.
+	CALIBRATION_STATUS_LIVE_ADJUST = 230, 	  // The XYZ calibration has been performed, now it remains to run the V2Calibration.gcode.
+  CALIBRATION_STATUS_CALIBRATED = 1,
+  CALIBRATION_STATUS_UNKNOWN = 0,
 };
 
 #include "Configuration_adv.h"

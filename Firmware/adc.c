@@ -12,7 +12,7 @@ uint16_t adc_sim_mask;
 
 #ifdef ADC_CALLBACK
 	extern void ADC_CALLBACK(void);
-#endif //ADC_CALLBACK
+#endif 
 
 
 void adc_init(void)
@@ -22,15 +22,9 @@ void adc_init(void)
 	ADCSRA |= (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 	ADMUX |= (1 << REFS0);
 	ADCSRA |= (1 << ADEN);
-//	ADCSRA |= (1 << ADIF) | (1 << ADSC);
 	DIDR0 = (ADC_CHAN_MSK & 0xff);
 	DIDR2 = (ADC_CHAN_MSK >> 8);
 	adc_reset();
-//	adc_sim_mask = 0b0101;
-//	adc_sim_mask = 0b100101;
-//	adc_values[0] = 1023 * 16;
-//	adc_values[2] = 1023 * 16;
-//	adc_values[5] = 1002 * 16;
 }
 
 void adc_reset(void)
@@ -78,7 +72,7 @@ void adc_cycle(void)
 			{
 #ifdef ADC_CALLBACK
 				ADC_CALLBACK();
-#endif //ADC_CALLBACK
+#endif 
 				adc_reset();
 			}
 		}

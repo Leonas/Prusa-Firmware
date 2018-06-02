@@ -8,7 +8,7 @@
 
 #if defined(__cplusplus)
 extern "C" {
-#endif //defined(__cplusplus)
+#endif
 
 
 extern uint8_t adc_state;
@@ -30,5 +30,5 @@ extern void adc_cycle(void);
 
 #if defined(__cplusplus)
 }
-#endif //defined(__cplusplus)
+#endif 
 #endif //_ADC_H
