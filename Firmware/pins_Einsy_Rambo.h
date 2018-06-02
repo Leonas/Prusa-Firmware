@@ -90,10 +90,10 @@
 #define E0_MS1_PIN          -1
 #define E0_MS2_PIN          -1
 
-#ifdef MULTIPLEXER
+// Multiplexer Pins
 #define E_MUX0_PIN         17
 #define E_MUX1_PIN         16
-#endif
+#define E_MUX2_PIN         78
 
 #define SDPOWER             -1
 #define SDSS                77

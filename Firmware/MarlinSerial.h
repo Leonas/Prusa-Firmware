@@ -111,6 +111,12 @@ class MarlinSerial //: public Stream
     */
 	static void write(uint8_t c)
 	{
+#ifdef MULTIPLEXER // don't do the second serial port when multiplexing
+        while (!((M_UCSRxA) & (1 << M_UDREx)))
+				;
+
+        M_UDRx = c;
+#else
 		if (selectedSerialPort == 0)
 		{
 			while (!((M_UCSRxA) & (1 << M_UDREx)));
@@ -121,10 +127,32 @@ class MarlinSerial //: public Stream
 			while (!((UCSR1A) & (1 << UDRE1)));
 			UDR1 = c;
 		}
+#endif
 	}
     
     static void checkRx(void)
     {
+#ifdef MULTIPLEXER
+        if((M_UCSRxA & (1<<M_RXCx)) != 0) {
+                // Test for a framing error.
+                if (M_UCSRxA & (1<<M_FEx)) {
+                    // Characters received with the framing errors will be ignored.
+                    (void)(*(char *)M_UDRx);
+                } else {
+                    unsigned char c  =  M_UDRx;
+                    int i = (unsigned int)(rx_buffer.head + 1) % RX_BUFFER_SIZE;
+                    // if we should be storing the received character into the location
+                    // just before the tail (meaning that the head would advance to the
+                    // current location of the tail), we're about to overflow the buffer
+                    // and so we don't write the character or advance the head.
+                    if (i != rx_buffer.tail) {
+                        rx_buffer.buffer[rx_buffer.head] = c;
+                        rx_buffer.head = i;
+                    }
+                    selectedSerialPort = 0;
+                }
+            }
+#else
         if (selectedSerialPort == 0) {
             if((M_UCSRxA & (1<<M_RXCx)) != 0) {
                 // Test for a framing error.
@@ -174,6 +202,7 @@ class MarlinSerial //: public Stream
                 }
             }
         }
+#endif
     }
     
     

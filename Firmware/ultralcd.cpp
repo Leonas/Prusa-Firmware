@@ -5108,23 +5108,28 @@ void switch_multiplexer(int extr) { //switches multiplexer for extruders
 
 	pinMode(E_MUX0_PIN, OUTPUT);
 	pinMode(E_MUX1_PIN, OUTPUT);
+  pinMode(E_MUX2_PIN, OUTPUT);
 
 	switch (extr) {
 	case 1:
 		WRITE(E_MUX0_PIN, HIGH);
 		WRITE(E_MUX1_PIN, LOW);
+    WRITE(E_MUX2_PIN, LOW);
 		break;
 	case 2:
 		WRITE(E_MUX0_PIN, LOW);
 		WRITE(E_MUX1_PIN, HIGH);
+    WRITE(E_MUX2_PIN, LOW);
 		break;
 	case 3:
 		WRITE(E_MUX0_PIN, HIGH);
 		WRITE(E_MUX1_PIN, HIGH);
+    WRITE(E_MUX2_PIN, LOW);
 		break;
 	default:
 		WRITE(E_MUX0_PIN, LOW);
 		WRITE(E_MUX1_PIN, LOW);
+    WRITE(E_MUX2_PIN, LOW);
 		break;
 	}
 	delay(100);

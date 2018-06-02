@@ -6110,6 +6110,7 @@ void process_commands()
 
 		  pinMode(E_MUX0_PIN, OUTPUT);
 		  pinMode(E_MUX1_PIN, OUTPUT);
+      pinMode(E_MUX2_PIN, OUTPUT);
 
 		  delay(100);
 		  SERIAL_ECHO_START;
@@ -6117,24 +6118,24 @@ void process_commands()
 		  SERIAL_ECHOLN((int)tmp_extruder);
 		  switch (tmp_extruder) {
 		  case 1:
-			  WRITE(E_MUX0_PIN, HIGH);
-			  WRITE(E_MUX1_PIN, LOW);
-
+        digitalWrite(E_MUX0_PIN,1);
+        digitalWrite(E_MUX1_PIN,0);
+        digitalWrite(E_MUX2_PIN,0);
 			  break;
 		  case 2:
-			  WRITE(E_MUX0_PIN, LOW);
-			  WRITE(E_MUX1_PIN, HIGH);
-
+			  WRITE(E_MUX0_PIN, 0);
+			  WRITE(E_MUX1_PIN, 1);
+        WRITE(E_MUX2_PIN, 0);
 			  break;
 		  case 3:
 			  WRITE(E_MUX0_PIN, HIGH);
 			  WRITE(E_MUX1_PIN, HIGH);
-
+        WRITE(E_MUX2_PIN, LOW);
 			  break;
 		  default:
 			  WRITE(E_MUX0_PIN, LOW);
 			  WRITE(E_MUX1_PIN, LOW);
-
+        WRITE(E_MUX2_PIN, LOW);
 			  break;
 		  }
 		  delay(100);

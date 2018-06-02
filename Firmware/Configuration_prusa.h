@@ -23,32 +23,18 @@
 
 // single extruder driver multiple material support
 #define EXTRUDERS 1
+
 #define MULTIPLEXER
-
-/*------------------------------------
- MOTOR CURRENT SETTINGS
- *------------------------------------*/
-
-// // Motor Current setting for BIG RAMBo
-// #define DIGIPOT_MOTOR_CURRENT {135,135,135,135,135} // Values 0-255 (RAMBO 135 = ~0.75A, 185 = ~1A)
-// #define DIGIPOT_MOTOR_CURRENT_LOUD {135,135,135,135,135}
-// 
-// // Motor Current settings for RAMBo mini PWM value = MotorCurrentSetting * 255 / range
-// #if MOTHERBOARD == BOARD_RAMBO_MINI_1_0 || MOTHERBOARD == BOARD_RAMBO_MINI_1_3
-// #define MOTOR_CURRENT_PWM_RANGE 2000
-// #define DEFAULT_PWM_MOTOR_CURRENT  {400, 750, 750} // {XY,Z,E}
-// #define DEFAULT_PWM_MOTOR_CURRENT_LOUD  {400, 750, 750} // {XY,Z,E}
-// #endif
-
 #ifdef MULTIPLEXER
 #define BOWDEN_LENGTH 433 //default total length for filament fast loading part
 #define FIL_LOAD_LENGTH 102 //length for loading filament into the nozzle
 #define FIL_COOLING 10 //length for cooling moves
-// #define E_MOTOR_LOW_CURRENT 350 // current for PRUSA code // NEEDS FIX FOR NEW DRIVERS
-// #define E_MOTOR_HIGH_CURRENT 700 //current for unloading filament, stop print //NEEDS FIX FOR NEW DRIVERS
 #endif //MULTIPLEXER
 
 
+/*------------------------------------
+ MOTOR CURRENT SETTINGS
+ *------------------------------------*/
 #define TMC2130_CURRENTS_H {16, 20, 35, 30}  // default holding currents for all axes
 #define TMC2130_CURRENTS_R {16, 20, 35, 30}  // default running currents for all axes
 #define TMC2130_UNLOAD_CURRENT_R 12			     // lower current for M600 to protect filament sensor 
@@ -161,7 +147,7 @@
 
 
 // Disable some commands
-//#define _DISABLE_M42_M226
+#define _DISABLE_M42_M226
 
 // Minimum ambient temperature limit to start triggering MINTEMP errors [C]
 // this value is litlebit higher that real limit, because ambient termistor is on the board and is temperated from it,
