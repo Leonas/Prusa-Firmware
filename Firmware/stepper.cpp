@@ -471,18 +471,18 @@ FORCE_INLINE void stepper_next_block()
     if ((out_bits & (1 << E_AXIS)) != 0) { // -direction
 #ifndef LIN_ADVANCE
       WRITE(E0_DIR_PIN, 
-  #ifdef SNMM
-        (snmm_extruder == 0 || snmm_extruder == 2) ? !INVERT_E0_DIR :
-  #endif // SNMM
+  #ifdef MULTIPLEXER
+        (multiplexer_extruder == 0 || multiplexer_extruder == 2) ? !INVERT_E0_DIR :
+  #endif // MULTIPLEXER
         INVERT_E0_DIR);
 #endif /* LIN_ADVANCE */
       count_direction[E_AXIS] = -1;
     } else { // +direction
 #ifndef LIN_ADVANCE
       WRITE(E0_DIR_PIN,
-  #ifdef SNMM
-        (snmm_extruder == 0 || snmm_extruder == 2) ? INVERT_E0_DIR :
-  #endif // SNMM
+  #ifdef MULTIPLEXER
+        (multiplexer_extruder == 0 || multiplexer_extruder == 2) ? INVERT_E0_DIR :
+  #endif // MULTIPLEXER
         !INVERT_E0_DIR);
 #endif /* LIN_ADVANCE */
       count_direction[E_AXIS] = 1;
@@ -829,12 +829,12 @@ FORCE_INLINE void isr() {
         {
           bool neg = e_steps < 0;
           bool dir =
-        #ifdef SNMM
-            (neg == (snmm_extruder & 1))
+        #ifdef MULTIPLEXER
+            (neg == (multiplexer_extruder & 1))
         #else
             neg
         #endif
-            ? INVERT_E0_DIR : !INVERT_E0_DIR; //If we have SNMM, reverse every second extruder.
+            ? INVERT_E0_DIR : !INVERT_E0_DIR; //If we have MULTIPLEXER, reverse every second extruder.
           WRITE_NC(E0_DIR_PIN, dir);
           if (neg)
             // Flip the e_steps counter to be always positive.

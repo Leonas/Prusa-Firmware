@@ -132,9 +132,9 @@ void lcd_mylang();
   #endif
   extern int8_t SilentModeMenu;
 
-#ifdef SNMM
-  extern uint8_t snmm_extruder;
-#endif // SNMM
+#ifdef MULTIPLEXER
+  extern uint8_t multiplexer_extruder;
+#endif // MULTIPLEXER
 
   extern bool cancel_heatup;
   extern bool isPrintPaused;
@@ -255,7 +255,7 @@ static void lcd_set_fan_check();
 void extr_unload_all(); 
 void extr_unload_used();
 void extr_unload();
-static char snmm_stop_print_menu();
+static char multiplexer_stop_print_menu();
 #ifdef SDCARD_SORT_ALPHA
  static void lcd_sort_type_set();
 #endif

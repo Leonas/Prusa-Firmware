@@ -89,7 +89,7 @@
 #define E0_MS1_PIN          -1
 #define E0_MS2_PIN          -1
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 #define E_MUX0_PIN         17
 #define E_MUX1_PIN         16
 //#define E1_STEP_PIN         33

@@ -153,8 +153,8 @@ extern void crashdet_disable();
 #endif //TMC2130
 
 
-#ifdef SNMM
-uint8_t snmm_extruder = 0;
+#ifdef MULTIPLEXER
+uint8_t multiplexer_extruder = 0;
 #endif
 
 #ifdef SDCARD_SORT_ALPHA
@@ -224,7 +224,7 @@ static void lcd_control_volumetric_menu();
 static void lcd_settings_menu_back();
 
 static void lcd_colorprint_change(); 
-#ifdef SNMM 
+#ifdef MULTIPLEXER 
 static void extr_adj_0(); 
 static void extr_adj_1(); 
 static void extr_adj_2(); 
@@ -252,7 +252,7 @@ static void lcd_menu_fails_stats();
 
 void lcd_finishstatus();
 
-static char snmm_stop_print_menu(); 
+static char multiplexer_stop_print_menu(); 
 
 #ifdef DOGLCD
 static void lcd_set_contrast();
@@ -724,7 +724,7 @@ void lcd_commands()
 		}
 	}
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 	if (lcd_commands_type == LCD_COMMAND_V2_CAL)
 	{
 		char cmd1[30];
@@ -988,7 +988,7 @@ void lcd_commands()
 
 	}
 
-#else //if not SNMM
+#else //if not MULTIPLEXER
 
 	if (lcd_commands_type == LCD_COMMAND_V2_CAL)
 	{
@@ -1222,7 +1222,7 @@ void lcd_commands()
 
 	}
 
-#endif // not SNMM
+#endif // not MULTIPLEXER
 
 	if (lcd_commands_type == LCD_COMMAND_STOP_PRINT)   /// stop print
 	{
@@ -1273,7 +1273,7 @@ void lcd_commands()
 			enquecommand_P(PSTR("G1 X50 Y" STRINGIFY(Y_MAX_POS) " E0 F7000"));
 			#endif
 			lcd_ignore_click(false);
-			#ifdef SNMM
+			#ifdef MULTIPLEXER
 			lcd_commands_step = 8;
 			#else
 			lcd_commands_step = 3;
@@ -1294,7 +1294,7 @@ void lcd_commands()
 			lcd_setstatuspgm(MSG_PRINT_ABORTED);
 			cancel_heatup = true;
 			setTargetBed(0);
-			#ifndef SNMM
+			#ifndef MULTIPLEXER
 			setTargetHotend(0, 0);	//heating when changing filament for multicolor
 			setTargetHotend(0, 1);
 			setTargetHotend(0, 2);
@@ -1305,7 +1305,7 @@ void lcd_commands()
 			lcd_commands_step = 5;
 		}
 		if (lcd_commands_step == 7 && !blocks_queued()) {
-			switch(snmm_stop_print_menu()) {
+			switch(multiplexer_stop_print_menu()) {
 				case 0: enquecommand_P(PSTR("M702")); break;//all 
 				case 1: enquecommand_P(PSTR("M702 U")); break; //used
 				case 2: enquecommand_P(PSTR("M702 C")); break; //current
@@ -1357,7 +1357,7 @@ void lcd_commands()
 			enquecommand_P(PSTR("G91"));
 			enquecommand_P(PSTR("G1 Z15 F1500"));
 			st_synchronize();
-			#ifdef SNMM
+			#ifdef MULTIPLEXER
 			lcd_commands_step = 7;
 			#else
 			lcd_commands_step = 5;
@@ -1924,7 +1924,7 @@ void lcd_wait_interact() {
   lcd_implementation_clear();
 
   lcd.setCursor(0, 1);
-#ifdef SNMM 
+#ifdef MULTIPLEXER 
   lcd_printPGM(MSG_PREPARE_FILAMENT);
 #else
   lcd_printPGM(MSG_INSERT_FILAMENT);
@@ -1993,7 +1993,7 @@ void lcd_loading_filament() {
     for (int j = 0; j < 10 ; j++) {
       manage_heater();
       manage_inactivity(true);
-#ifdef SNMM
+#ifdef MULTIPLEXER
       delay(153);
 #else
 	  delay(137);
@@ -3824,7 +3824,7 @@ void lcd_calibrate_pinda() {
 	lcd_return_to_status();
 }
 
-#ifndef SNMM
+#ifndef MULTIPLEXER
 
 /*void lcd_calibrate_extruder() {
 	
@@ -4025,7 +4025,7 @@ void lcd_wizard(int state) {
 
 			break;
 		case 6: //waiting for preheat nozzle for PLA;
-#ifndef SNMM
+#ifndef MULTIPLEXER
 			lcd_display_message_fullscreen_P(MSG_WIZARD_WILL_PREHEAT);
 			current_position[Z_AXIS] = 100; //move in z axis to make space for loading filament
 			plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], homing_feedrate[Z_AXIS] / 60, active_extruder);
@@ -4043,7 +4043,7 @@ void lcd_wizard(int state) {
 				lcd_set_custom_characters();
 				delay_keep_alive(1000);
 			}
-#endif //not SNMM
+#endif //not MULTIPLEXER
 			state = 7;
 			break;
 		case 7: //load filament 
@@ -4054,7 +4054,7 @@ void lcd_wizard(int state) {
 			lcd_update_enable(false);
 			lcd_implementation_clear();
 			lcd_print_at_PGM(0, 2, MSG_LOADING_FILAMENT);
-#ifdef SNMM
+#ifdef MULTIPLEXER
 			change_extr(0);
 #endif
 			gcode_M701();
@@ -4517,7 +4517,7 @@ static void lcd_calibration_menu()
     MENU_ITEM(function, MSG_CALIBRATE_BED, lcd_mesh_calibration);
     // "Calibrate Z" with storing the reference values to EEPROM.
     MENU_ITEM(submenu, MSG_HOMEYZ, lcd_mesh_calibration_z);
-#ifndef SNMM
+#ifndef MULTIPLEXER
 	//MENU_ITEM(function, MSG_CALIBRATE_E, lcd_calibrate_extruder);
 #endif
     // "Mesh Bed Leveling"
@@ -4530,7 +4530,7 @@ static void lcd_calibration_menu()
 #ifndef MK1BP
     MENU_ITEM(gcode, MSG_CALIBRATE_BED_RESET, PSTR("M44"));
 #endif //MK1BP
-#ifndef SNMM
+#ifndef MULTIPLEXER
 	//MENU_ITEM(function, MSG_RESET_CALIBRATE_E, lcd_extr_cal_reset);
 #endif
 #ifndef MK1BP
@@ -4838,7 +4838,7 @@ void bowden_menu() {
 	}
 }
 
-static char snmm_stop_print_menu() { //menu for choosing which filaments will be unloaded in stop print
+static char multiplexer_stop_print_menu() { //menu for choosing which filaments will be unloaded in stop print
 	lcd_implementation_clear();
 	lcd_print_at_PGM(0,0,MSG_UNLOAD_FILAMENT); lcd.print(":");
 	lcd.setCursor(0, 1); lcd.print(">");
@@ -4973,7 +4973,7 @@ char choose_extruder_menu() {
 
 
 char reset_menu() {
-#ifdef SNMM
+#ifdef MULTIPLEXER
 	int items_no = 5;
 #else
 	int items_no = 4;
@@ -4987,9 +4987,9 @@ char reset_menu() {
 	item[1] = "Statistics";
 	item[2] = "Shipping prep";
 	item[3] = "All Data";
-#ifdef SNMM
+#ifdef MULTIPLEXER
 	item[4] = "Bowden length";
-#endif // SNMM
+#endif // MULTIPLEXER
 
 	enc_dif = encoderDiff;
 	lcd_implementation_clear();
@@ -5088,7 +5088,7 @@ static void lcd_ping_allert() {
 };
 
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 
 static void extr_mov(float shift, float feed_rate) { //move extruder no matter what the current heater temperature is
 	set_extrude_min_temp(.0);
@@ -5106,7 +5106,7 @@ void change_extr(int extr) { //switches multiplexer for extruders
 	disable_e1();
 	disable_e2();
 
-	snmm_extruder = extr;
+	multiplexer_extruder = extr;
 
 	pinMode(E_MUX0_PIN, OUTPUT);
 	pinMode(E_MUX1_PIN, OUTPUT);
@@ -5142,7 +5142,7 @@ static int get_ext_nr() { //reads multiplexer input pins and return current extr
 
 
 void display_loading() {
-	switch (snmm_extruder) {
+	switch (multiplexer_extruder) {
 	case 1: lcd_display_message_fullscreen_P(MSG_FILAMENT_LOADING_T1); break;
 	case 2: lcd_display_message_fullscreen_P(MSG_FILAMENT_LOADING_T2); break;
 	case 3: lcd_display_message_fullscreen_P(MSG_FILAMENT_LOADING_T3); break;
@@ -5150,7 +5150,7 @@ void display_loading() {
 	}
 }
 
-void extr_adj(int extruder) //loading filament for SNMM
+void extr_adj(int extruder) //loading filament for MULTIPLEXER
 {
 	bool correct;
 	max_feedrate[E_AXIS] =80;
@@ -5181,7 +5181,7 @@ void extr_adj(int extruder) //loading filament for SNMM
 	lcd.setCursor(0, 0); lcd_printPGM(MSG_LOADING_FILAMENT);
 	if(strlen(MSG_LOADING_FILAMENT)>18) lcd.setCursor(0, 1);
 	else lcd.print(" ");
-	lcd.print(snmm_extruder + 1);
+	lcd.print(multiplexer_extruder + 1);
 	lcd.setCursor(0, 2); lcd_printPGM(MSG_PLEASE_WAIT);
 	st_synchronize();
 	max_feedrate[E_AXIS] = 50;
@@ -5202,7 +5202,7 @@ void extr_unload() { //unloads filament
 		max_feedrate[E_AXIS] = 50;
 		lcd.setCursor(0, 0); lcd_printPGM(MSG_UNLOADING_FILAMENT);
 		lcd.print(" ");
-		lcd.print(snmm_extruder + 1);
+		lcd.print(multiplexer_extruder + 1);
 		lcd.setCursor(0, 2); lcd_printPGM(MSG_PLEASE_WAIT);
 		if (current_position[Z_AXIS] < 15) {
 			current_position[Z_AXIS] += 15; //lifting in Z direction to make space for extrusion
@@ -5235,9 +5235,9 @@ void extr_unload() { //unloads filament
 		}
 	
 		max_feedrate[E_AXIS] = 80;
-		current_position[E_AXIS] -= (bowden_length[snmm_extruder] + 60 + FIL_LOAD_LENGTH) / 2;
+		current_position[E_AXIS] -= (bowden_length[multiplexer_extruder] + 60 + FIL_LOAD_LENGTH) / 2;
 		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 500, active_extruder);
-		current_position[E_AXIS] -= (bowden_length[snmm_extruder] + 60 + FIL_LOAD_LENGTH) / 2;
+		current_position[E_AXIS] -= (bowden_length[multiplexer_extruder] + 60 + FIL_LOAD_LENGTH) / 2;
 		plan_buffer_line(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS], 500, active_extruder);
 		st_synchronize();
 		//st_current_init();
@@ -5329,17 +5329,17 @@ void extr_unload_all() {
 	}
 }
 
-//unloading just used filament (for snmm)
+//unloading just used filament (for multiplexer)
 
 void extr_unload_used() {
 	if (degHotend0() > EXTRUDE_MINTEMP) {
 		for (int i = 0; i < 4; i++) {
-			if (snmm_filaments_used & (1 << i)) {
+			if (multiplexer_filaments_used & (1 << i)) {
 				change_extr(i);
 				extr_unload();
 			}
 		}
-		snmm_filaments_used = 0;
+		multiplexer_filaments_used = 0;
 	}
 	else {
 		lcd_implementation_clear();
@@ -5780,7 +5780,7 @@ static void lcd_main_menu()
   } 
   else 
   {
-	#ifndef SNMM
+	#ifndef MULTIPLEXER
 #ifdef PAT9125
 	if ( ((filament_autoload_enabled == true) && (fsensor_enabled == true)))
         MENU_ITEM(submenu, MSG_AUTOLOAD_FILAMENT, lcd_menu_AutoLoadFilament);
@@ -5789,7 +5789,7 @@ static void lcd_main_menu()
 		MENU_ITEM(function, MSG_LOAD_FILAMENT, lcd_LoadFilament);
 	MENU_ITEM(submenu, MSG_UNLOAD_FILAMENT, lcd_unLoadFilament);
 	#endif
-	#ifdef SNMM
+	#ifdef MULTIPLEXER
 	MENU_ITEM(submenu, MSG_LOAD_FILAMENT, fil_load_menu);
 	MENU_ITEM(submenu, MSG_UNLOAD_FILAMENT, fil_unload_menu);
 	MENU_ITEM(submenu, MSG_CHANGE_EXTR, change_extr_menu);

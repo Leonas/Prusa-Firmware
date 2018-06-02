@@ -322,7 +322,7 @@ bool custom_message;
 bool loading_flag = false;
 unsigned int custom_message_type;
 unsigned int custom_message_state;
-char snmm_filaments_used = 0;
+char multiplexer_filaments_used = 0;
 
 bool fan_state[2];
 int fan_edge_counter[2];
@@ -1248,8 +1248,8 @@ void setup()
 	if (eeprom_read_word((uint16_t*)EEPROM_CRASH_COUNT_X_TOT) == 0xffff) eeprom_write_word((uint16_t*)EEPROM_CRASH_COUNT_X_TOT, 0);
 	if (eeprom_read_word((uint16_t*)EEPROM_CRASH_COUNT_Y_TOT) == 0xffff) eeprom_write_word((uint16_t*)EEPROM_CRASH_COUNT_Y_TOT, 0);
 	if (eeprom_read_word((uint16_t*)EEPROM_FERROR_COUNT_TOT) == 0xffff) eeprom_write_word((uint16_t*)EEPROM_FERROR_COUNT_TOT, 0);
-#ifdef SNMM
-	if (eeprom_read_dword((uint32_t*)EEPROM_BOWDEN_LENGTH) == 0x0ffffffff) { //bowden length used for SNMM
+#ifdef MULTIPLEXER
+	if (eeprom_read_dword((uint32_t*)EEPROM_BOWDEN_LENGTH) == 0x0ffffffff) { //bowden length used for MULTIPLEXER
 	  int _z = BOWDEN_LENGTH;
 	  for(int i = 0; i<4; i++) EEPROM_save_B(EEPROM_BOWDEN_LENGTH + i * 2, &_z);
 	}
@@ -2468,8 +2468,8 @@ void gcode_M114()
 
 void gcode_M701()
 {
-#ifdef SNMM
-	extr_adj(snmm_extruder);//loads current extruder
+#ifdef MULTIPLEXER
+	extr_adj(multiplexer_extruder);//loads current extruder
 #else
 	enable_z();
 	custom_message = true;
@@ -2583,7 +2583,7 @@ void process_commands()
   // PRUSA GCODES
   KEEPALIVE_STATE(IN_HANDLER);
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
   float tmp_motor[3] = DEFAULT_PWM_MOTOR_CURRENT;
   float tmp_motor_loud[3] = DEFAULT_PWM_MOTOR_CURRENT_LOUD;
   int8_t SilentMode;
@@ -5133,7 +5133,7 @@ Sigma_Exit:
           #endif
         }
       }
-	  snmm_filaments_used = 0;
+	  multiplexer_filaments_used = 0;
       break;
     case 85: // M85
       if(code_seen('S')) {
@@ -5908,11 +5908,11 @@ Sigma_Exit:
 			manage_heater();
 			manage_inactivity(true);
 
-			/*#ifdef SNMM
+			/*#ifdef MULTIPLEXER
 			target[E_AXIS] += 0.002;
 			plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 500, active_extruder);
 
-			#endif // SNMM*/
+			#endif // MULTIPLEXER*/
 
 			//if (cnt == 0)
 			{
@@ -5998,16 +5998,16 @@ Sigma_Exit:
 			}
 			else
 			{
-#ifdef SNMM
+#ifdef MULTIPLEXER
 
 #else
 #ifdef FILAMENTCHANGE_FINALRETRACT
 				target[E_AXIS] += FILAMENTCHANGE_FINALRETRACT;
 #endif
-#endif // SNMM
+#endif // MULTIPLEXER
 			}
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 			target[E_AXIS] += 12;
 			plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 3500, active_extruder);
 			target[E_AXIS] += 6;
@@ -6019,7 +6019,7 @@ Sigma_Exit:
 			plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 50, active_extruder);
 			target[E_AXIS] += (FIL_COOLING*-1);
 			plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 50, active_extruder);
-			target[E_AXIS] += (bowden_length[snmm_extruder] * -1);
+			target[E_AXIS] += (bowden_length[multiplexer_extruder] * -1);
 			plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 3000, active_extruder);
 			st_synchronize();
 
@@ -6058,7 +6058,7 @@ Sigma_Exit:
 			else st_current_set(2, tmp_motor_loud[2]);		
 #endif //TMC2130
 
-#endif // SNMM
+#endif // MULTIPLEXER
 
 
 			//finish moves
@@ -6110,11 +6110,11 @@ Sigma_Exit:
 			  break;
 		  }
 #endif //PAT9125
-/*#ifdef SNMM
+/*#ifdef MULTIPLEXER
 		  target[E_AXIS] += 0.002;
 		  plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 500, active_extruder);
 
-#endif // SNMM*/
+#endif // MULTIPLEXER*/
 
         }
 #ifdef PAT9125
@@ -6124,7 +6124,7 @@ Sigma_Exit:
 		KEEPALIVE_STATE(IN_HANDLER);
 
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 		display_loading();
 		KEEPALIVE_STATE(PAUSED_FOR_USER);
 		do {
@@ -6142,7 +6142,7 @@ Sigma_Exit:
         //Filament inserted     
 		//Feed the filament to the end of nozzle quickly   		
 		st_synchronize();
-		target[E_AXIS] += bowden_length[snmm_extruder];
+		target[E_AXIS] += bowden_length[multiplexer_extruder];
 		plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 3000, active_extruder);
 		target[E_AXIS] += FIL_LOAD_LENGTH - 60;
 		plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 1400, active_extruder);
@@ -6153,7 +6153,7 @@ Sigma_Exit:
 #else
 		target[E_AXIS] += FILAMENTCHANGE_FIRSTFEED;
 		plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], FILAMENTCHANGE_EFEED, active_extruder);
-#endif // SNMM
+#endif // MULTIPLEXER
         
         //Extrude some filament
         target[E_AXIS]+= FILAMENTCHANGE_FINALFEED ;
@@ -6176,7 +6176,7 @@ Sigma_Exit:
             
              // Filament failed to load so load it again
              case 2:
-#ifdef SNMM
+#ifdef MULTIPLEXER
 				 display_loading();
 				 do {
 					 target[E_AXIS] += 0.002;
@@ -6185,7 +6185,7 @@ Sigma_Exit:
 				 } while (!lcd_clicked());
 
 				 st_synchronize();
-				 target[E_AXIS] += bowden_length[snmm_extruder];
+				 target[E_AXIS] += bowden_length[multiplexer_extruder];
 				 plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 3000, active_extruder);
 				 target[E_AXIS] += FIL_LOAD_LENGTH - 60;
 				 plan_buffer_line(target[X_AXIS], target[Y_AXIS], target[Z_AXIS], target[E_AXIS], 1400, active_extruder);
@@ -6585,7 +6585,7 @@ Sigma_Exit:
 	break;
 	case 702:
 	{
-#ifdef SNMM
+#ifdef MULTIPLEXER
 		if (code_seen('U')) {
 			extr_unload_used(); //unload all filaments which were used in current print
 		}
@@ -6676,15 +6676,15 @@ Sigma_Exit:
 		  else {
 			  tmp_extruder = code_value();
 		  }
-		  snmm_filaments_used |= (1 << tmp_extruder); //for stop print
-#ifdef SNMM
+		  multiplexer_filaments_used |= (1 << tmp_extruder); //for stop print
+#ifdef MULTIPLEXER
           
     #ifdef LIN_ADVANCE
-          if (snmm_extruder != tmp_extruder)
+          if (multiplexer_extruder != tmp_extruder)
             clear_current_adv_vars(); //Check if the selected extruder is not the active one and reset LIN_ADVANCE variables if so.
     #endif
           
-		  snmm_extruder = tmp_extruder;
+		  multiplexer_extruder = tmp_extruder;
 
 		  
 		  delay(100);

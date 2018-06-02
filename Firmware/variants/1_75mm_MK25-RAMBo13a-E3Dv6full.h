@@ -481,7 +481,7 @@ const bool Z_MIN_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 
 #define MIN_PRINT_FAN_SPEED 75
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 #define DEFAULT_RETRACTION 4 //used for PINDA temp calibration and pause print
 #else
 #define DEFAULT_RETRACTION 1 //used for PINDA temp calibration and pause print

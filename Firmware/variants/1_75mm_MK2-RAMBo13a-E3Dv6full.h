@@ -20,7 +20,7 @@ GENERAL SETTINGS
 #define MOTHERBOARD BOARD_RAMBO_MINI_1_3
 
 // Prusa Single extruder multiple material suport
-//#define SNMM
+//#define MULTIPLEXER
 
 // Uncomment the below for the E3D PT100 temperature sensor (with or without PT100 Amplifier)
 //#define E3D_PT100_EXTRUDER_WITH_AMP
@@ -34,7 +34,7 @@ AXIS SETTINGS
 *------------------------------------*/
 
 // Steps per unit {X,Y,Z,E}
-#ifdef SNMM
+#ifdef MULTIPLEXER
 #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,140}
 #else
 #define DEFAULT_AXIS_STEPS_PER_UNIT   {100,100,3200/8,161.3}
@@ -138,14 +138,14 @@ EXTRUDER SETTINGS
 #define EXTRUDER_AUTO_FAN_SPEED   255  // == full speed
 
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 //#define BOWDEN_LENGTH	408
 #define BOWDEN_LENGTH 433 //default total length for filament fast loading part; max length for extrusion is 465 mm!; this length can be adjusted in service menu
 #define FIL_LOAD_LENGTH 102 //length for loading filament into the nozzle
 #define FIL_COOLING 10 //length for cooling moves
 #define E_MOTOR_LOW_CURRENT 350 // current for PRUSAY code
 #define E_MOTOR_HIGH_CURRENT 700 //current for unloading filament, stop print, PRUSAY ramming
-#endif //SNMM
+#endif //MULTIPLEXER
 
 //#define DIS //for measuring bed heigth and PINDa detection heigth relative to auto home point, experimental function
 
@@ -414,7 +414,7 @@ THERMISTORS SETTINGS
 
 #define DEFAULT_PID_TEMP 210
 
-#ifdef SNMM
+#ifdef MULTIPLEXER
 #define DEFAULT_RETRACTION 4 //used for PINDA temp calibration and pause print
 #else
 #define DEFAULT_RETRACTION 1 //used for PINDA temp calibration and pause print
@@ -424,7 +424,7 @@ THERMISTORS SETTINGS
 
 #define M600_TIMEOUT 600  //seconds
 
-#ifndef SNMM
+#ifndef MULTIPLEXER
 #define SUPPORT_VERBOSITY
 #endif
 
