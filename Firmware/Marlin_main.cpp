@@ -1231,11 +1231,16 @@ void setup()
 	if (eeprom_read_word((uint16_t*)EEPROM_CRASH_COUNT_X_TOT) == 0xffff) eeprom_write_word((uint16_t*)EEPROM_CRASH_COUNT_X_TOT, 0);
 	if (eeprom_read_word((uint16_t*)EEPROM_CRASH_COUNT_Y_TOT) == 0xffff) eeprom_write_word((uint16_t*)EEPROM_CRASH_COUNT_Y_TOT, 0);
 	if (eeprom_read_word((uint16_t*)EEPROM_FERROR_COUNT_TOT) == 0xffff) eeprom_write_word((uint16_t*)EEPROM_FERROR_COUNT_TOT, 0);
+  
+  
 #ifdef MULTIPLEXER
 	if (eeprom_read_dword((uint32_t*)EEPROM_BOWDEN_LENGTH) == 0x0ffffffff) { //bowden length used for MULTIPLEXER
 	  int _z = BOWDEN_LENGTH;
 	  for(int i = 0; i<4; i++) EEPROM_save_B(EEPROM_BOWDEN_LENGTH + i * 2, &_z);
 	}
+  
+  SET_OUTPUT(E_MUX0_PIN);
+  SET_OUTPUT(E_MUX1_PIN);
 #endif
 
   // In the future, somewhere here would one compare the current firmware version against the firmware version stored in the EEPROM.
@@ -4143,7 +4148,89 @@ void process_commands()
         }
       }
      break;
+
+// Mismatch on a lot of commands     
+    // case 43:
+    // if (code_seen('T')) {   // must be first or else its "S" and "E" parameters will execute endstop or servo test
+    //   toggle_pins();
+    //   return;
+    // }
+    // 
+    // // Enable or disable endstop monitoring
+    // if (code_seen('E')) {
+    //   endstop_monitor_flag = parser.value_bool();
+    //   SERIAL_PROTOCOLPGM("endstop monitor ");
+    //   serialprintPGM(endstop_monitor_flag ? PSTR("en") : PSTR("dis"));
+    //   SERIAL_PROTOCOLLNPGM("abled");
+    //   return;
+    // }
+    // 
+    // // Get the range of pins to test or watch
+    // const pin_t first_pin = parser.byteval('P'),
+    //             last_pin = parser.seenval('P') ? first_pin : NUM_DIGITAL_PINS - 1;
+    // 
+    // if (first_pin > last_pin) return;
+    // 
+    // const bool ignore_protection = parser.boolval('I');
+    // 
+    // // Watch until click, M108, or reset
+    // if (parser.boolval('W')) {
+    //   SERIAL_PROTOCOLLNPGM("Watching pins");
+    //   byte pin_state[last_pin - first_pin + 1];
+    //   for (pin_t pin = first_pin; pin <= last_pin; pin++) {
+    //     if (pin_is_protected(pin) && !ignore_protection) continue;
+    //     pinMode(pin, INPUT_PULLUP);
+    //     delay(1);
+    //     /*
+    //       if (IS_ANALOG(pin))
+    //         pin_state[pin - first_pin] = analogRead(pin - analogInputToDigitalPin(0)); // int16_t pin_state[...]
+    //       else
+    //     //*/
+    //         pin_state[pin - first_pin] = digitalRead(pin);
+    //   }
+    // 
+    //   #if HAS_RESUME_CONTINUE
+    //     wait_for_user = true;
+    //     KEEPALIVE_STATE(PAUSED_FOR_USER);
+    //   #endif
+    // 
+    //   for (;;) {
+    //     for (pin_t pin = first_pin; pin <= last_pin; pin++) {
+    //       if (pin_is_protected(pin) && !ignore_protection) continue;
+    //       const byte val =
+    //         /*
+    //           IS_ANALOG(pin)
+    //             ? analogRead(pin - analogInputToDigitalPin(0)) : // int16_t val
+    //             :
+    //         //*/
+    //           digitalRead(pin);
+    //       if (val != pin_state[pin - first_pin]) {
+    //         report_pin_state_extended(pin, ignore_protection, false);
+    //         pin_state[pin - first_pin] = val;
+    //       }
+    //     }
+    // 
+    //     #if HAS_RESUME_CONTINUE
+    //       if (!wait_for_user) {
+    //         KEEPALIVE_STATE(IN_HANDLER);
+    //         break;
+    //       }
+    //     #endif
+    // 
+    //     safe_delay(200);
+    //   }
+    //   return;
+    // }
+    // 
+    // // Report current state of selected pin(s)
+    // for (pin_t pin = first_pin; pin <= last_pin; pin++)
+    //   report_pin_state_extended(pin, ignore_protection, true);
+    // 
+    // break;
 #endif //_DISABLE_M42_M226
+
+
+
     case 44: // M44: Prusa3D: Reset the bed skew and offset calibration.
 
 		// Reset the baby step value and the baby step applied flag.
@@ -6093,7 +6180,7 @@ void process_commands()
 		  else {
 			  tmp_extruder = code_value();
 		  }
-		  multiplexer_filaments_used |= (1 << tmp_extruder); //for stop print
+		  // multiplexer_filaments_used |= (1 << tmp_extruder); //for stop print
       #ifdef MULTIPLEXER
           
         #ifdef LIN_ADVANCE
@@ -6104,38 +6191,31 @@ void process_commands()
 		  multiplexer_extruder = tmp_extruder;
 
 		  
-		  delay(100);
-
 		  disable_e0();
 
-		  pinMode(E_MUX0_PIN, OUTPUT);
-		  pinMode(E_MUX1_PIN, OUTPUT);
-      pinMode(E_MUX2_PIN, OUTPUT);
-
-		  delay(100);
 		  SERIAL_ECHO_START;
 		  SERIAL_ECHO("T:");
 		  SERIAL_ECHOLN((int)tmp_extruder);
 		  switch (tmp_extruder) {
+      case 0:
+        WRITE(E_MUX0_PIN, LOW);
+        WRITE(E_MUX1_PIN, LOW);
+        break;
 		  case 1:
-        digitalWrite(E_MUX0_PIN,1);
-        digitalWrite(E_MUX1_PIN,0);
-        digitalWrite(E_MUX2_PIN,0);
+			  WRITE(E_MUX0_PIN, HIGH);
+			  WRITE(E_MUX1_PIN, LOW);
 			  break;
 		  case 2:
-			  WRITE(E_MUX0_PIN, 0);
-			  WRITE(E_MUX1_PIN, 1);
-        WRITE(E_MUX2_PIN, 0);
+			  WRITE(E_MUX0_PIN, LOW);
+			  WRITE(E_MUX1_PIN, HIGH);
 			  break;
 		  case 3:
 			  WRITE(E_MUX0_PIN, HIGH);
 			  WRITE(E_MUX1_PIN, HIGH);
-        WRITE(E_MUX2_PIN, LOW);
 			  break;
 		  default:
 			  WRITE(E_MUX0_PIN, LOW);
 			  WRITE(E_MUX1_PIN, LOW);
-        WRITE(E_MUX2_PIN, LOW);
 			  break;
 		  }
 		  delay(100);

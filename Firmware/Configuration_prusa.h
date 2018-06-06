@@ -147,7 +147,7 @@
 
 
 // Disable some commands
-#define _DISABLE_M42_M226
+// #define _DISABLE_M42_M226
 
 // Minimum ambient temperature limit to start triggering MINTEMP errors [C]
 // this value is litlebit higher that real limit, because ambient termistor is on the board and is temperated from it,

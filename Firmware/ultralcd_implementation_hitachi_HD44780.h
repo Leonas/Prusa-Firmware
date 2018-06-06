@@ -821,8 +821,8 @@ if (print_sd_status)
 	}
 	else {
 #ifdef MULTIPLEXER
-		lcd_printPGM(PSTR(" E"));
-		lcd.print(get_active_extruder() + 1);
+		lcd_printPGM(PSTR(" T"));
+		lcd.print(get_active_extruder());
 
 #else
 		lcd.setCursor(LCD_WIDTH - 8 - 2, 2);
