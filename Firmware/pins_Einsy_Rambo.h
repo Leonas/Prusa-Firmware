@@ -20,10 +20,10 @@
 #define SWI2C                    // enable software i2c
 #define SWI2C_A8                 // 8bit address functions
 
-#define PAT9125_SWI2C
-#define PAT9125_SWI2C_SDA      20 //SDA on P3
-#define PAT9125_SWI2C_SCL      21 //SCL on P3
-#define PAT9125_SWI2C_CFG    0xb1 //2us clock delay, 2048 cycles timeout
+// #define PAT9125_SWI2C
+// #define PAT9125_SWI2C_SDA      20 //SDA on P3
+// #define PAT9125_SWI2C_SCL      21 //SCL on P3
+// #define PAT9125_SWI2C_CFG    0xb1 //2us clock delay, 2048 cycles timeout
 
 //#define PAT9125_HWI2C
 
@@ -91,9 +91,9 @@
 #define E0_MS2_PIN          -1
 
 // Multiplexer Pins
-#define E_MUX0_PIN         17
-#define E_MUX1_PIN         16
-#define E_MUX2_PIN         78
+#define E_MUX0_PIN         17  
+#define E_MUX1_PIN         76
+// #define E_MUX1_PIN         16  //issue with EINSY_RAMBO board (always +5V)
 
 #define SDPOWER             -1
 #define SDSS                77
