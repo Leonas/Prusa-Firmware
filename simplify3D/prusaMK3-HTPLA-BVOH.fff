@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<profile name="prusaMK3-HTPLA-BVOH" version="2018-06-06 10:50:12" app="S3D-Software 4.0.0">
+<profile name="prusaMK3-HTPLA-BVOH" version="2018-06-06 13:28:47" app="S3D-Software 4.0.1">
   <baseProfile>Prusa Research Original Prusa i3 MK3</baseProfile>
   <printMaterial></printMaterial>
   <printQuality></printQuality>
@@ -9,9 +9,9 @@
     <diameter>0.4</diameter>
     <autoWidth>0</autoWidth>
     <width>0.4</width>
-    <extrusionMultiplier>1</extrusionMultiplier>
+    <extrusionMultiplier>1.1</extrusionMultiplier>
     <useRetract>1</useRetract>
-    <retractionDistance>1</retractionDistance>
+    <retractionDistance>1.4</retractionDistance>
     <extraRestartDistance>0</extraRestartDistance>
     <retractionZLift>0</retractionZLift>
     <retractionSpeed>2400</retractionSpeed>
@@ -25,9 +25,9 @@
     <diameter>0.4</diameter>
     <autoWidth>0</autoWidth>
     <width>0.4</width>
-    <extrusionMultiplier>0.9</extrusionMultiplier>
+    <extrusionMultiplier>1.1</extrusionMultiplier>
     <useRetract>1</useRetract>
-    <retractionDistance>1</retractionDistance>
+    <retractionDistance>1.4</retractionDistance>
     <extraRestartDistance>0</extraRestartDistance>
     <retractionZLift>0</retractionZLift>
     <retractionSpeed>2400</retractionSpeed>
@@ -37,7 +37,7 @@
     <wipeDistance>5</wipeDistance>
   </extruder>
   <primaryExtruder>0</primaryExtruder>
-  <layerHeight>0.3</layerHeight>
+  <layerHeight>0.15</layerHeight>
   <topSolidLayers>3</topSolidLayers>
   <bottomSolidLayers>3</bottomSolidLayers>
   <perimeterOutlines>2</perimeterOutlines>
@@ -47,8 +47,8 @@
   <startPointOriginY>0</startPointOriginY>
   <sequentialIslands>0</sequentialIslands>
   <spiralVaseMode>0</spiralVaseMode>
-  <firstLayerHeightPercentage>150</firstLayerHeightPercentage>
-  <firstLayerWidthPercentage>100</firstLayerWidthPercentage>
+  <firstLayerHeightPercentage>100</firstLayerHeightPercentage>
+  <firstLayerWidthPercentage>120</firstLayerWidthPercentage>
   <firstLayerUnderspeed>0.5</firstLayerUnderspeed>
   <useRaft>0</useRaft>
   <raftExtruder>0</raftExtruder>
@@ -58,21 +58,21 @@
   <raftSeparationDistance>0.14</raftSeparationDistance>
   <raftTopInfill>100</raftTopInfill>
   <aboveRaftSpeedMultiplier>0.3</aboveRaftSpeedMultiplier>
-  <useSkirt>0</useSkirt>
+  <useSkirt>1</useSkirt>
   <skirtExtruder>0</skirtExtruder>
   <skirtLayers>1</skirtLayers>
   <skirtOutlines>2</skirtOutlines>
-  <skirtOffset>4</skirtOffset>
+  <skirtOffset>10</skirtOffset>
   <usePrimePillar>1</usePrimePillar>
   <primePillarExtruder>999</primePillarExtruder>
-  <primePillarWidth>10</primePillarWidth>
+  <primePillarWidth>16</primePillarWidth>
   <primePillarLocation>7</primePillarLocation>
   <primePillarSpeedMultiplier>1</primePillarSpeedMultiplier>
-  <useOozeShield>1</useOozeShield>
-  <oozeShieldExtruder>999</oozeShieldExtruder>
-  <oozeShieldOffset>2</oozeShieldOffset>
+  <useOozeShield>0</useOozeShield>
+  <oozeShieldExtruder>0</oozeShieldExtruder>
+  <oozeShieldOffset>10</oozeShieldOffset>
   <oozeShieldOutlines>2</oozeShieldOutlines>
-  <oozeShieldSidewallShape>1</oozeShieldSidewallShape>
+  <oozeShieldSidewallShape>0</oozeShieldSidewallShape>
   <oozeShieldSidewallAngle>30</oozeShieldSidewallAngle>
   <oozeShieldSpeedMultiplier>1</oozeShieldSpeedMultiplier>
   <infillExtruder>0</infillExtruder>
@@ -94,14 +94,14 @@
   <denseSupportExtruder>1</denseSupportExtruder>
   <denseSupportLayers>2</denseSupportLayers>
   <denseSupportInfillPercentage>100</denseSupportInfillPercentage>
-  <supportLayerInterval>1</supportLayerInterval>
+  <supportLayerInterval>2</supportLayerInterval>
   <supportHorizontalPartOffset>0</supportHorizontalPartOffset>
   <supportUpperSeparationLayers>0</supportUpperSeparationLayers>
   <supportLowerSeparationLayers>0</supportLowerSeparationLayers>
   <supportType>0</supportType>
   <supportGridSpacing>1</supportGridSpacing>
-  <maxOverhangAngle>15</maxOverhangAngle>
-  <supportAngles>45,-45</supportAngles>
+  <maxOverhangAngle>20</maxOverhangAngle>
+  <supportAngles>0,90</supportAngles>
   <temperatureController name="Primary Extruder">
     <temperatureNumber>0</temperatureNumber>
     <isHeatedBed>0</isHeatedBed>
@@ -162,10 +162,10 @@
   <baudRateOverride>115200</baudRateOverride>
   <overridePrinterModels>1</overridePrinterModels>
   <printerModelsOverride></printerModelsOverride>
-  <startingGcode>M900 K200 ; set linear advance correctly,G28 W ; home all axes without mesh bed leveling,G80 ; run mesh bed leveling routine,G1 Y-3.0 F1000.0 ; prepare to prime,G92 E0 ; reset extrusion distance,G1 X60.0 E9.0  F1000.0 ; priming,G1 X100.0 E12.5  F1000.0 ; priming</startingGcode>
+  <startingGcode>M900 K200 ; set linear advance correctly,G28 W ; home all axes without mesh bed leveling,G80 ; run mesh bed leveling routine,G1 Y-3.0 F1000.0 ; prepare to prime,G92 E0 ; reset extrusion distance,G1 X60.0 E9.0  F500.0 ; priming,G1 X100.0 E12.5  F500.0 ; priming</startingGcode>
   <layerChangeGcode></layerChangeGcode>
   <retractionGcode></retractionGcode>
-  <toolChangeGcode></toolChangeGcode>
+  <toolChangeGcode>; Move near tower,; Purge 20mm?,; Wipe on tower</toolChangeGcode>
   <endingGcode>G4 ; wait,M106 S0 ; turn off cooling fan,M104 S0 ; turn off extruder,M140 S0 ; turn off bed,G1 X0 Y200 ; part removal,M84 ; disable motors</endingGcode>
   <exportFileFormat>gcode</exportFileFormat>
   <celebration>0</celebration>
@@ -199,13 +199,13 @@
   <retractBetweenLayers>1</retractBetweenLayers>
   <useRetractionMinTravel>0</useRetractionMinTravel>
   <retractionMinTravel>3</retractionMinTravel>
-  <retractWhileWiping>1</retractWhileWiping>
-  <onlyWipeOutlines>1</onlyWipeOutlines>
-  <avoidCrossingOutline>0</avoidCrossingOutline>
+  <retractWhileWiping>0</retractWhileWiping>
+  <onlyWipeOutlines>0</onlyWipeOutlines>
+  <avoidCrossingOutline>1</avoidCrossingOutline>
   <maxMovementDetourFactor>3</maxMovementDetourFactor>
-  <toolChangeRetractionDistance>4</toolChangeRetractionDistance>
+  <toolChangeRetractionDistance>80</toolChangeRetractionDistance>
   <toolChangeExtraRestartDistance>0</toolChangeExtraRestartDistance>
-  <toolChangeRetractionSpeed>6000</toolChangeRetractionSpeed>
+  <toolChangeRetractionSpeed>540000</toolChangeRetractionSpeed>
   <externalThinWallType>1</externalThinWallType>
   <internalThinWallType>2</internalThinWallType>
   <thinWallAllowedOverlapPercentage>40</thinWallAllowedOverlapPercentage>

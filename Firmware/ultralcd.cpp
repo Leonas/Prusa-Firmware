@@ -761,11 +761,11 @@ void lcd_commands()
 		{
 			lcd_timeoutToStatus = millis() + LCD_TIMEOUT_TO_STATUS;
 			enquecommand_P(PSTR("G1 Z0.250 F7200.000"));
-			enquecommand_P(PSTR("G1 X50.0 E80.0 F1000.0"));
-			enquecommand_P(PSTR("G1 X160.0 E20.0 F1000.0"));
+			enquecommand_P(PSTR("G1 X50.0 E80.0 F400.0"));
+			enquecommand_P(PSTR("G1 X160.0 E20.0 F400.0"));
 			enquecommand_P(PSTR("G1 Z0.200 F7200.000"));
-			enquecommand_P(PSTR("G1 X220.0 E13 F1000.0"));
-			enquecommand_P(PSTR("G1 X240.0 E0 F1000.0"));
+			enquecommand_P(PSTR("G1 X220.0 E13 F400.0"));
+			enquecommand_P(PSTR("G1 X240.0 E0 F400.0"));
 			enquecommand_P(PSTR("G92 E0.0"));
 			enquecommand_P(PSTR("G21"));
 			enquecommand_P(PSTR("G90"));
