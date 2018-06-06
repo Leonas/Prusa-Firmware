@@ -1,6 +1,10 @@
 # Prusa MK3 + Multi-Material-v1
 
-## Work in progress: Multiplexer not switching extruders yet.
+## How to make it work
+
+1. A 5 pin connector is needed to replace the 4 pin connector on the cable end that connects to the EINSY RAMBO board.
+2. The wires should be connected like [white][black][empty][blue][red] with the red wire being closest to the edge. See hardware folder for photos.
+3. Upload Firmware.ino.rambo.hex to your printer.
 
 ## 1. Development environment preparation
 
