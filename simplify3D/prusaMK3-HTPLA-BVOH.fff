@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<profile name="prusaMK3-HTPLA-BVOH" version="2018-06-06 13:28:47" app="S3D-Software 4.0.1">
+<profile name="prusaMK3-HTPLA-BVOH" version="2018-06-07 16:09:07" app="S3D-Software 4.0.1">
   <baseProfile>Prusa Research Original Prusa i3 MK3</baseProfile>
   <printMaterial></printMaterial>
   <printQuality></printQuality>
@@ -15,7 +15,7 @@
     <extraRestartDistance>0</extraRestartDistance>
     <retractionZLift>0</retractionZLift>
     <retractionSpeed>2400</retractionSpeed>
-    <useCoasting>1</useCoasting>
+    <useCoasting>0</useCoasting>
     <coastingDistance>0.2</coastingDistance>
     <useWipe>0</useWipe>
     <wipeDistance>2</wipeDistance>
@@ -31,7 +31,7 @@
     <extraRestartDistance>0</extraRestartDistance>
     <retractionZLift>0</retractionZLift>
     <retractionSpeed>2400</retractionSpeed>
-    <useCoasting>1</useCoasting>
+    <useCoasting>0</useCoasting>
     <coastingDistance>0.2</coastingDistance>
     <useWipe>0</useWipe>
     <wipeDistance>5</wipeDistance>
@@ -47,27 +47,27 @@
   <startPointOriginY>0</startPointOriginY>
   <sequentialIslands>0</sequentialIslands>
   <spiralVaseMode>0</spiralVaseMode>
-  <firstLayerHeightPercentage>100</firstLayerHeightPercentage>
+  <firstLayerHeightPercentage>150</firstLayerHeightPercentage>
   <firstLayerWidthPercentage>120</firstLayerWidthPercentage>
   <firstLayerUnderspeed>0.5</firstLayerUnderspeed>
-  <useRaft>0</useRaft>
-  <raftExtruder>0</raftExtruder>
-  <raftTopLayers>3</raftTopLayers>
-  <raftBaseLayers>2</raftBaseLayers>
+  <useRaft>1</useRaft>
+  <raftExtruder>1</raftExtruder>
+  <raftTopLayers>1</raftTopLayers>
+  <raftBaseLayers>0</raftBaseLayers>
   <raftOffset>3</raftOffset>
-  <raftSeparationDistance>0.14</raftSeparationDistance>
+  <raftSeparationDistance>0</raftSeparationDistance>
   <raftTopInfill>100</raftTopInfill>
   <aboveRaftSpeedMultiplier>0.3</aboveRaftSpeedMultiplier>
-  <useSkirt>1</useSkirt>
-  <skirtExtruder>0</skirtExtruder>
+  <useSkirt>0</useSkirt>
+  <skirtExtruder>1</skirtExtruder>
   <skirtLayers>1</skirtLayers>
   <skirtOutlines>2</skirtOutlines>
   <skirtOffset>10</skirtOffset>
   <usePrimePillar>1</usePrimePillar>
   <primePillarExtruder>999</primePillarExtruder>
-  <primePillarWidth>16</primePillarWidth>
-  <primePillarLocation>7</primePillarLocation>
-  <primePillarSpeedMultiplier>1</primePillarSpeedMultiplier>
+  <primePillarWidth>20</primePillarWidth>
+  <primePillarLocation>0</primePillarLocation>
+  <primePillarSpeedMultiplier>2</primePillarSpeedMultiplier>
   <useOozeShield>0</useOozeShield>
   <oozeShieldExtruder>0</oozeShieldExtruder>
   <oozeShieldOffset>10</oozeShieldOffset>
@@ -90,18 +90,18 @@
   <supportExtruder>1</supportExtruder>
   <supportInfillPercentage>25</supportInfillPercentage>
   <supportExtraInflation>1</supportExtraInflation>
-  <supportBaseLayers>2</supportBaseLayers>
+  <supportBaseLayers>0</supportBaseLayers>
   <denseSupportExtruder>1</denseSupportExtruder>
   <denseSupportLayers>2</denseSupportLayers>
-  <denseSupportInfillPercentage>100</denseSupportInfillPercentage>
-  <supportLayerInterval>2</supportLayerInterval>
-  <supportHorizontalPartOffset>0</supportHorizontalPartOffset>
+  <denseSupportInfillPercentage>70</denseSupportInfillPercentage>
+  <supportLayerInterval>1</supportLayerInterval>
+  <supportHorizontalPartOffset>0.05</supportHorizontalPartOffset>
   <supportUpperSeparationLayers>0</supportUpperSeparationLayers>
   <supportLowerSeparationLayers>0</supportLowerSeparationLayers>
   <supportType>0</supportType>
   <supportGridSpacing>1</supportGridSpacing>
   <maxOverhangAngle>20</maxOverhangAngle>
-  <supportAngles>0,90</supportAngles>
+  <supportAngles>0</supportAngles>
   <temperatureController name="Primary Extruder">
     <temperatureNumber>0</temperatureNumber>
     <isHeatedBed>0</isHeatedBed>
@@ -165,8 +165,8 @@
   <startingGcode>M900 K200 ; set linear advance correctly,G28 W ; home all axes without mesh bed leveling,G80 ; run mesh bed leveling routine,G1 Y-3.0 F1000.0 ; prepare to prime,G92 E0 ; reset extrusion distance,G1 X60.0 E9.0  F500.0 ; priming,G1 X100.0 E12.5  F500.0 ; priming</startingGcode>
   <layerChangeGcode></layerChangeGcode>
   <retractionGcode></retractionGcode>
-  <toolChangeGcode>; Move near tower,; Purge 20mm?,; Wipe on tower</toolChangeGcode>
-  <endingGcode>G4 ; wait,M106 S0 ; turn off cooling fan,M104 S0 ; turn off extruder,M140 S0 ; turn off bed,G1 X0 Y200 ; part removal,M84 ; disable motors</endingGcode>
+  <toolChangeGcode>; Tool Change Retract 80mm</toolChangeGcode>
+  <endingGcode>M104 S0 ; turn off extruder,M140 S0 ; turn off bed,G90 ; absolute mode,G1 X0 Y200; move away,G91 ; relative mode,G1 Z10 ; lift 10mm,M84 ; disable motors</endingGcode>
   <exportFileFormat>gcode</exportFileFormat>
   <celebration>0</celebration>
   <celebrationSong>Random Song</celebrationSong>
@@ -205,8 +205,8 @@
   <maxMovementDetourFactor>3</maxMovementDetourFactor>
   <toolChangeRetractionDistance>80</toolChangeRetractionDistance>
   <toolChangeExtraRestartDistance>0</toolChangeExtraRestartDistance>
-  <toolChangeRetractionSpeed>540000</toolChangeRetractionSpeed>
-  <externalThinWallType>1</externalThinWallType>
+  <toolChangeRetractionSpeed>12000</toolChangeRetractionSpeed>
+  <externalThinWallType>0</externalThinWallType>
   <internalThinWallType>2</internalThinWallType>
   <thinWallAllowedOverlapPercentage>40</thinWallAllowedOverlapPercentage>
   <singleExtrusionMinLength>1</singleExtrusionMinLength>

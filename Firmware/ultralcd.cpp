@@ -770,7 +770,7 @@ void lcd_commands()
 			enquecommand_P(PSTR("G21"));
 			enquecommand_P(PSTR("G90"));
 			enquecommand_P(PSTR("M83"));
-			enquecommand_P(PSTR("G1 E-4 F2100.00000"));
+			enquecommand_P(PSTR("G1 E-2 F2100.00000"));
 			enquecommand_P(PSTR("G1 Z0.150 F7200.000"));
 			enquecommand_P(PSTR("M204 S1000"));
 			enquecommand_P(PSTR("G1 F4000"));
@@ -785,9 +785,10 @@ void lcd_commands()
 		{
 			lcd_timeoutToStatus = millis() + LCD_TIMEOUT_TO_STATUS;
 
-
+      //Problem found with first layer setup:
+      //This makes the extrusion have unequal thicknesses.
 			enquecommand_P(PSTR("G1 X50 Y155"));
-			enquecommand_P(PSTR("G1 X60 Y155 E4"));
+			enquecommand_P(PSTR("G1 X60 Y155 E2"));
 			enquecommand_P(PSTR("G1 F1080"));
 			enquecommand_P(PSTR("G1 X75 Y155 E2.5"));
 			enquecommand_P(PSTR("G1 X100 Y155 E2"));
@@ -941,10 +942,6 @@ void lcd_commands()
 			enquecommand_P(PSTR("G1 X110 E2.8"));
 			enquecommand_P(PSTR("G1 F5200"));
 			enquecommand_P(PSTR("G1 X40 E3"));
-			enquecommand_P(PSTR("G1 E-15.0000 F5000"));
-			enquecommand_P(PSTR("G1 E-50.0000 F5400"));
-			enquecommand_P(PSTR("G1 E-15.0000 F3000"));
-			enquecommand_P(PSTR("G1 E-12.0000 F2000"));
 			enquecommand_P(PSTR("G1 F1600"));
 
 			lcd_commands_step = 2;
@@ -4055,7 +4052,7 @@ void lcd_wizard(int state) {
 			lcd_implementation_clear();
 			lcd_print_at_PGM(0, 2, MSG_LOADING_FILAMENT);
 #ifdef MULTIPLEXER
-			switch_multiplexer(0); //POSSIBLE THIS IS ALWAYS GOING TO 0?
+			switch_multiplexer(0); 
 #endif
 			gcode_M701();
 #ifdef PAT9125
@@ -5103,6 +5100,7 @@ void switch_multiplexer(int extr) { //switches multiplexer for extruders
 	delay(100);
 
 	disable_e0();
+	disable_e1();
 
 	multiplexer_extruder = extr;
 
